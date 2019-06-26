@@ -1,5 +1,6 @@
 package com.tyybbi.rekbong;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -8,11 +9,18 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String TAG = "RekDebug";
+    protected String[] plates = new String[21];
+    //protected String[] plates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +28,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Add some stuff into plates for testing purposes
+        int i = 0;
+        while (i <= 20) {
+            plates[i] = "IUU-822";
+            Log.i(TAG, "plates[i] = " + plates[i] + ", i = " + i);
+            i++;
+        }
+
+        ArrayAdapter<String> itemsAdapter =
+            new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, plates);
+
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(itemsAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
