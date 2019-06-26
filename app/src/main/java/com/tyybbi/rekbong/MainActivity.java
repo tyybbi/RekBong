@@ -19,8 +19,7 @@ import android.widget.ListView;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
-    protected String[] plates = new String[21];
-    //protected String[] plates;
+    protected String[] plates = new String[1000];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +28,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Add some stuff into plates for testing purposes
-        int i = 0;
-        while (i <= 20) {
-            plates[i] = "IUU-822";
-            Log.i(TAG, "plates[i] = " + plates[i] + ", i = " + i);
+        // Populate plates[] with some lorem ipsum
+        int i = 1;
+        while (i < 1000) {
+            plates[i-1] = "IUU-" + i;
+            Log.i(TAG, "plates[i-1] = " + plates[i-1] + ", i = " + i);
             i++;
         }
 
