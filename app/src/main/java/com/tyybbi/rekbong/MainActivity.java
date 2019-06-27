@@ -16,8 +16,10 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,8 +58,11 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long curDate = date.getTime();
-                mDBHandler.addNewPlate("IVS-666", curDate);
+                long curDateMillis = date.getTime();
+                mDBHandler.addNewPlate("IVS-666", curDateMillis);
+                DateFormat simpleFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS Z");
+                Date readableDate = new Date(curDateMillis);
+                Log.i(TAG, "readableDate: " + simpleFormat.format(readableDate));
                 Snackbar.make(view, "New plate added!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

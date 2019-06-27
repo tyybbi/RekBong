@@ -5,11 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 public class DBHandler extends SQLiteOpenHelper {
 
+    public static final String TAG = "DBHandler";
     private static final int DATABASE_VERSION = 1;
     protected static final String DATABASE_NAME = "Plates.db";
     private static final String TABLE_plates = "plates";
@@ -24,13 +26,15 @@ public class DBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String sql = "CREATE TABLE IF NOT EXISTS " +
+        Log.i(TAG, "BEFORE create");
+        String sql = "CREATE TABLE " +
                 TABLE_plates + "(" +
                 KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 KEY_PLATE + "TEXT NOT NULL, " +
                 KEY_DATE + "INTEGER ) ";
 
         db.execSQL(sql);
+        Log.i(TAG, "AFTER create");
     }
 
     @Override
@@ -44,11 +48,18 @@ public class DBHandler extends SQLiteOpenHelper {
 
     // CRUD Operations
 
-    public void addNewPlate(String KEY_PLATE, long KEY_DATE) {
+    public void addNewPlate(String plate, long date) {
         SQLiteDatabase mDb = this.getWritableDatabase();
+        Log.i(TAG, "after getWrit");
         ContentValues contentValues = new ContentValues();
 
-        // TODO
+        contentValues.put(KEY_PLATE, plate);
+        contentValues.put(KEY_DATE, date);
+        mDb.insert(TABLE_plates, null, contentValues);
+
+        Log.i(TAG, "plate, date: " + plate + date);
+
+        mDb.close();
     }
 
     public ArrayList<Plate> readAllPlates() {
@@ -58,8 +69,15 @@ public class DBHandler extends SQLiteOpenHelper {
         String sql = "SELECT * FROM " + TABLE_plates;
         Cursor c = mDb.rawQuery(sql, null);
 
+        /*
+        c.moveToFirst();
+        while (c.isAfterLast() == false) {
+            //Plate lPlate = new Plate();
+        }
+        */
         return mList;
     }
+
 
     public void updatePlate() {
         // TODO
