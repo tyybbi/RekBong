@@ -16,10 +16,16 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
-    protected String[] plates = new String[1000];
+    //protected String[] plates = new String[1000];
+    DBHandler mDBHandler;
+    ArrayList<Plate> dbContent;
+    Date date = new Date();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,16 +34,20 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Populate plates[] with some lorem ipsum
+        mDBHandler = new DBHandler(this);
+        dbContent = mDBHandler.readAllPlates();
+
+        /* Populate plates[] with some lorem ipsum
         int i = 1;
         while (i < 1000) {
             plates[i-1] = "IUU-" + i;
             Log.i(TAG, "plates[i-1] = " + plates[i-1] + ", i = " + i);
             i++;
         }
+        */
 
-        ArrayAdapter<String> itemsAdapter =
-            new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, plates);
+        ArrayAdapter<Plate> itemsAdapter =
+            new ArrayAdapter<Plate>(this, android.R.layout.simple_list_item_1, dbContent);
 
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
@@ -46,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                long curDate = date.getTime();
+                mDBHandler.addNewPlate("IVS-666", curDate);
+                Snackbar.make(view, "New plate added!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
