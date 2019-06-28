@@ -1,6 +1,8 @@
 package com.tyybbi.rekbong;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -10,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.text.DateFormat;
@@ -24,10 +28,10 @@ import java.text.SimpleDateFormat;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
-    //protected String[] plates = new String[1000];
     DBHandler mDBHandler;
     ArrayList<Plate> dbContent;
     Date date = new Date();
+    final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mDBHandler = new DBHandler(this);
         dbContent = mDBHandler.readAllPlates();
 
-        /* Populate plates[] with some lorem ipsum
-        int i = 1;
-        while (i < 1000) {
-            plates[i-1] = "IUU-" + i;
-            Log.i(TAG, "plates[i-1] = " + plates[i-1] + ", i = " + i);
-            i++;
-        }
-        */
-
+        Log.i(TAG, "dbContent.size() = " + dbContent.size());
         ArrayAdapter<Plate> itemsAdapter =
             new ArrayAdapter<Plate>(this, android.R.layout.simple_list_item_1, dbContent);
 
@@ -58,13 +54,51 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long curDateMillis = date.getTime();
-                mDBHandler.addNewPlate("IVS-666", curDateMillis);
-                DateFormat simpleFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS Z");
-                Date readableDate = new Date(curDateMillis);
-                Log.i(TAG, "readableDate: " + simpleFormat.format(readableDate));
-                Snackbar.make(view, "New plate added!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                // Alert Dialog stuff
+                LayoutInflater li = LayoutInflater.from(context);
+				View promptsView = li.inflate(R.layout.dialog_addplate, null);
+
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+						context);
+
+				// set prompts.xml to alertdialog builder
+				alertDialogBuilder.setView(promptsView);
+
+				final EditText plateInput = (EditText) promptsView
+						.findViewById(R.id.plateEditText);
+
+				// set dialog message
+				alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // get user input and set it to inputText
+                                        long curDateMillis = date.getTime();
+                                        DateFormat simpleFormat = new SimpleDateFormat("yyyy-mm-dd_HH:mm:ss:SSS Z");
+                                        Date readableDate = new Date(curDateMillis);
+                                        String inputText = plateInput.getText().toString();
+                                        mDBHandler.addNewPlate(inputText, curDateMillis);
+                                        Log.i(TAG, "readableDate: " + simpleFormat.format(readableDate));
+                                        Log.i(TAG, "inputText: " + inputText);
+                                        //Snackbar.make(view, "New plate added!", Snackbar.LENGTH_LONG)
+                                        //        .setAction("Action", null).show();
+                                        //mDBHandler.addNewPlate("IVS-666", curDateMillis);
+                                    }
+                                })
+					.setNegativeButton("Cancel",
+					  new DialogInterface.OnClickListener() {
+					    public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					    }
+					  });
+
+				// create alert dialog
+				AlertDialog alertDialog = alertDialogBuilder.create();
+
+				// show it
+				alertDialog.show();
             }
         });
     }

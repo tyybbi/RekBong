@@ -26,15 +26,14 @@ public class DBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        Log.i(TAG, "BEFORE create");
         String sql = "CREATE TABLE " +
                 TABLE_plates + "(" +
                 KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                KEY_PLATE + "TEXT NOT NULL, " +
-                KEY_DATE + "INTEGER ) ";
+                KEY_PLATE + " TEXT NOT NULL, " +
+                KEY_DATE + " INTEGER )";
 
         db.execSQL(sql);
-        Log.i(TAG, "AFTER create");
+        Log.i(TAG, "sql: " + sql);
     }
 
     @Override
@@ -69,12 +68,18 @@ public class DBHandler extends SQLiteOpenHelper {
         String sql = "SELECT * FROM " + TABLE_plates;
         Cursor c = mDb.rawQuery(sql, null);
 
-        /*
         c.moveToFirst();
         while (c.isAfterLast() == false) {
-            //Plate lPlate = new Plate();
+            Plate lPlate = new Plate();
+            lPlate.id = Integer.parseInt(c.getString(c.getColumnIndex(KEY_ID)));
+            lPlate.plate = c.getString(c.getColumnIndex(KEY_PLATE));
+            lPlate.datetime = c.getLong(c.getColumnIndex(KEY_DATE));
+            mList.add(lPlate);
+            c.moveToNext();
         }
-        */
+
+        mDb.close();
+
         return mList;
     }
 
