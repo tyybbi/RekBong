@@ -47,7 +47,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     // CRUD Operations
 
-    public void addNewPlate(String plate, long date) {
+    /*public void addNewPlate(String plate, long date) {
         SQLiteDatabase mDb = this.getWritableDatabase();
         Log.i(TAG, "after getWrit");
         ContentValues contentValues = new ContentValues();
@@ -59,10 +59,24 @@ public class DBHandler extends SQLiteOpenHelper {
         Log.i(TAG, "plate, date: " + plate + date);
 
         mDb.close();
+    }*/
+
+    public void addNewPlate(Plate newPlate) {
+        SQLiteDatabase mDb = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(KEY_PLATE, newPlate.getPlate());
+        cv.put(KEY_DATE, newPlate.getDatetime());
+        mDb.insert(TABLE_plates, null, cv);
+
+        Log.i(TAG, "plate, datetime: " + newPlate.getPlate() + newPlate.getDatetime());
+
+        mDb.close();
     }
 
-    public ArrayList<Plate> readAllPlates() {
-        ArrayList<Plate> mList = new ArrayList<>();
+    //public ArrayList<Plate> readAllPlates() {
+    public ArrayList readAllPlates() {
+        ArrayList mList = new ArrayList<>();
         SQLiteDatabase mDb = this.getReadableDatabase();
 
         String sql = "SELECT * FROM " + TABLE_plates;
@@ -71,13 +85,14 @@ public class DBHandler extends SQLiteOpenHelper {
         c.moveToFirst();
         while (c.isAfterLast() == false) {
             Plate lPlate = new Plate();
-            lPlate.id = Integer.parseInt(c.getString(c.getColumnIndex(KEY_ID)));
-            lPlate.plate = c.getString(c.getColumnIndex(KEY_PLATE));
-            lPlate.datetime = c.getLong(c.getColumnIndex(KEY_DATE));
+            lPlate.setId(Integer.parseInt(c.getString(c.getColumnIndex(KEY_ID))));
+            lPlate.setPlate(c.getString(c.getColumnIndex(KEY_PLATE)));
+            lPlate.setDatetime(c.getLong(c.getColumnIndex(KEY_DATE)));
             mList.add(lPlate);
             c.moveToNext();
         }
 
+        c.close();
         mDb.close();
 
         return mList;

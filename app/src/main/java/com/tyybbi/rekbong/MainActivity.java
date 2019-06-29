@@ -3,6 +3,7 @@ package com.tyybbi.rekbong;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
     DBHandler mDBHandler;
-    ArrayList<Plate> dbContent;
+    ArrayList dbContent;
     Date date = new Date();
     final Context context = this;
 
@@ -43,17 +45,17 @@ public class MainActivity extends AppCompatActivity {
         mDBHandler = new DBHandler(this);
         dbContent = mDBHandler.readAllPlates();
 
-        Log.i(TAG, "dbContent.size() = " + dbContent.size());
-        ArrayAdapter<Plate> itemsAdapter =
-            new ArrayAdapter<Plate>(this, android.R.layout.simple_list_item_1, dbContent);
-
-        ListView listView = (ListView) findViewById(R.id.listView);
+        final ArrayAdapter itemsAdapter =
+            new ArrayAdapter(this, android.R.layout.simple_list_item_1, dbContent);
+ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                final Plate mPlate = new Plate();
 
                 // Alert Dialog stuff
                 LayoutInflater li = LayoutInflater.from(context);
@@ -76,12 +78,21 @@ public class MainActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int id) {
                                         // get user input and set it to inputText
                                         long curDateMillis = date.getTime();
-                                        DateFormat simpleFormat = new SimpleDateFormat("yyyy-mm-dd_HH:mm:ss:SSS Z");
+                                        DateFormat simpleFormat = new SimpleDateFormat("HH:mm:ss:SSS dd.MM.yyyy");
                                         Date readableDate = new Date(curDateMillis);
                                         String inputText = plateInput.getText().toString();
-                                        mDBHandler.addNewPlate(inputText, curDateMillis);
+                                        mPlate.setPlate(inputText);
+                                        mPlate.setDatetime(curDateMillis);
+                                        mDBHandler.addNewPlate(mPlate);
                                         Log.i(TAG, "readableDate: " + simpleFormat.format(readableDate));
-                                        Log.i(TAG, "inputText: " + inputText);
+                                        Log.i(TAG, "inputText: " + mPlate.getPlate());
+                                        // Just testing
+                                        //itemsAdapter.notifyDataSetChanged();
+                                        // works but is it good?
+                                        Intent intent = getIntent();
+                                        finish();
+                                        startActivity(intent);
+
                                         //Snackbar.make(view, "New plate added!", Snackbar.LENGTH_LONG)
                                         //        .setAction("Action", null).show();
                                         //mDBHandler.addNewPlate("IVS-666", curDateMillis);
