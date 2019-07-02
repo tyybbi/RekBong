@@ -73,7 +73,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         mDb.close();
     }
-
+    
     //public ArrayList<Plate> readAllPlates() {
     public ArrayList readAllPlates() {
         ArrayList mList = new ArrayList<>();

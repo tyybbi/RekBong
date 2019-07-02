@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 
 import java.text.DateFormat;
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         final ArrayAdapter itemsAdapter =
             new ArrayAdapter(this, android.R.layout.simple_list_item_1, dbContent);
-ListView listView = (ListView) findViewById(R.id.listView);
+
+        ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
