@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -49,12 +48,8 @@ public class MainActivity extends AppCompatActivity {
         mDBHandler = new DBHandler(this);
         //dbContent = mDBHandler.readAllPlates();
         dbContent = mDBHandler.readAllPlates();
-        Log.i(TAG, "after readAllPlates");
 
-        //final ArrayAdapter itemsAdapter =
-        //    new ArrayAdapter(this, android.R.layout.simple_list_item_1, dbContent);
-
-        CustomCursorAdapter itemsAdapter =
+        final CustomCursorAdapter itemsAdapter =
                 new CustomCursorAdapter(this, dbContent);
 
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -88,16 +83,14 @@ public class MainActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int id) {
                                         // get user input and set it to inputText
                                         long curDateMillis = date.getTime();
-                                        DateFormat simpleFormat = new SimpleDateFormat("HH:mm:ss:SSS dd.MM.yyyy");
-                                        Date readableDate = new Date(curDateMillis);
                                         String inputText = plateInput.getText().toString();
                                         mPlate.setPlate(inputText);
                                         mPlate.setDatetime(curDateMillis);
                                         mDBHandler.addNewPlate(mPlate);
-                                        Log.i(TAG, "readableDate: " + simpleFormat.format(readableDate));
-                                        Log.i(TAG, "inputText: " + mPlate.getPlate());
                                         // Just testing
                                         //itemsAdapter.notifyDataSetChanged();
+                                        // Not working
+                                        //itemsAdapter.changeCursor(dbContent);
                                         // works but is it good?
                                         Intent intent = getIntent();
                                         finish();
@@ -139,10 +132,13 @@ public class MainActivity extends AppCompatActivity {
             TextView dateText = (TextView) view.findViewById(R.id.listViewDateText);
             TextView plateText = (TextView) view.findViewById(R.id.listViewPlateText);
             // Extract properties from cursor
-            int date = cursor.getInt(cursor.getColumnIndexOrThrow("datetime"));
+            long dateM = cursor.getLong(cursor.getColumnIndexOrThrow("datetime"));
             String plate = cursor.getString(cursor.getColumnIndexOrThrow("plate"));
             // Populate fields with extracted properties
-            dateText.setText(String.valueOf(date));
+            DateFormat simpleFormat = new SimpleDateFormat("d.M.yyyy HH:mm");
+            Date readableDate = new Date(dateM);
+
+            dateText.setText(simpleFormat.format(readableDate));
             plateText.setText(plate);
         }
     }
