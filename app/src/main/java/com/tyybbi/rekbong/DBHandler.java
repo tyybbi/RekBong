@@ -15,7 +15,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     protected static final String DATABASE_NAME = "Plates.db";
     private static final String TABLE_plates = "plates";
-    private static final String KEY_ID = "id";
+    private static final String KEY_ID = "_id";
     private static final String KEY_PLATE = "plate";
     private static final String KEY_DATE = "datetime";
 
@@ -74,28 +74,29 @@ public class DBHandler extends SQLiteOpenHelper {
         mDb.close();
     }
     
-    //public ArrayList<Plate> readAllPlates() {
-    public ArrayList readAllPlates() {
-        ArrayList mList = new ArrayList<>();
+    //public ArrayList readAllPlates() {
+    public Cursor readAllPlates() {
+        //ArrayList mList = new ArrayList<>();
         SQLiteDatabase mDb = this.getReadableDatabase();
 
         String sql = "SELECT * FROM " + TABLE_plates;
         Cursor c = mDb.rawQuery(sql, null);
 
-        c.moveToFirst();
-        while (c.isAfterLast() == false) {
-            Plate lPlate = new Plate();
-            lPlate.setId(Integer.parseInt(c.getString(c.getColumnIndex(KEY_ID))));
-            lPlate.setPlate(c.getString(c.getColumnIndex(KEY_PLATE)));
-            lPlate.setDatetime(c.getLong(c.getColumnIndex(KEY_DATE)));
-            mList.add(lPlate);
-            c.moveToNext();
-        }
+        //c.moveToFirst();
+        //while (c.isAfterLast() == false) {
+        //    Plate lPlate = new Plate();
+        //    lPlate.setId(Integer.parseInt(c.getString(c.getColumnIndex(KEY_ID))));
+        //    lPlate.setPlate(c.getString(c.getColumnIndex(KEY_PLATE)));
+        //    lPlate.setDatetime(c.getLong(c.getColumnIndex(KEY_DATE)));
+        //    mList.add(lPlate);
+        //    c.moveToNext();
+        //}
 
-        c.close();
-        mDb.close();
+        //c.close();
+        //mDb.close();
 
-        return mList;
+        //return mList;
+        return c;
     }
 
 

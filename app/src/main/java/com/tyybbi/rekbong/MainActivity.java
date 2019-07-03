@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,11 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -32,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
     DBHandler mDBHandler;
-    ArrayList dbContent;
+    //ArrayList dbContent;
+    Cursor dbContent;
     Date date = new Date();
     final Context context = this;
 
@@ -44,10 +47,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mDBHandler = new DBHandler(this);
+        //dbContent = mDBHandler.readAllPlates();
         dbContent = mDBHandler.readAllPlates();
+        Log.i(TAG, "after readAllPlates");
 
-        final ArrayAdapter itemsAdapter =
-            new ArrayAdapter(this, android.R.layout.simple_list_item_1, dbContent);
+        //final ArrayAdapter itemsAdapter =
+        //    new ArrayAdapter(this, android.R.layout.simple_list_item_1, dbContent);
+
+        CustomCursorAdapter itemsAdapter =
+                new CustomCursorAdapter(this, dbContent);
 
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
@@ -114,6 +122,29 @@ public class MainActivity extends AppCompatActivity {
 				alertDialog.show();
             }
         });
+    }
+
+    public class CustomCursorAdapter extends CursorAdapter {
+        public CustomCursorAdapter(Context context, Cursor cursor) {
+            super(context, cursor, 0);
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+            return LayoutInflater.from(context).inflate(R.layout.listview_row, viewGroup, false);
+        }
+
+        @Override
+        public void bindView (View view, Context context, Cursor cursor){
+            TextView dateText = (TextView) view.findViewById(R.id.listViewDateText);
+            TextView plateText = (TextView) view.findViewById(R.id.listViewPlateText);
+            // Extract properties from cursor
+            int date = cursor.getInt(cursor.getColumnIndexOrThrow("datetime"));
+            String plate = cursor.getString(cursor.getColumnIndexOrThrow("plate"));
+            // Populate fields with extracted properties
+            dateText.setText(String.valueOf(date));
+            plateText.setText(plate);
+        }
     }
 
     @Override
