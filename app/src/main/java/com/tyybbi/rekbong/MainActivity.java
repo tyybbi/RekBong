@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -55,10 +56,18 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
 
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //TODO
+                return false;
+            }
+        });
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 
                 final Plate mPlate = new Plate();
 
@@ -87,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                                         mPlate.setPlate(inputText);
                                         mPlate.setDatetime(curDateMillis);
                                         mDBHandler.addNewPlate(mPlate);
+
                                         // Just testing
                                         //itemsAdapter.notifyDataSetChanged();
                                         // Not working
@@ -97,8 +107,7 @@ public class MainActivity extends AppCompatActivity {
                                         startActivity(intent);
 
                                         //Snackbar.make(view, "New plate added!", Snackbar.LENGTH_LONG)
-                                        //        .setAction("Action", null).show();
-                                        //mDBHandler.addNewPlate("IVS-666", curDateMillis);
+                                        //       .setAction("Action", null).show();
                                     }
                                 })
 					.setNegativeButton("Cancel",

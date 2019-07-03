@@ -3,24 +3,33 @@
     android:id="@+id/listViewRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/listViewInner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="false"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/listViewPlateText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:capitalize="characters"
+            android:clickable="false"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/listViewDateText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:gravity="right"
+            android:text="TextView"
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>
