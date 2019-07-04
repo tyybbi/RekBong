@@ -61,7 +61,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public Cursor readAllPlates() {
         SQLiteDatabase mDb = this.getReadableDatabase();
 
-        String sql = "SELECT * FROM " + TABLE_plates;
+        String sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_ID + " DESC";
         Cursor c = mDb.rawQuery(sql, null);
 
         return c;

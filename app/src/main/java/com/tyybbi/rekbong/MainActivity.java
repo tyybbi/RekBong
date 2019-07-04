@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //TODO
+                Log.i(TAG, "Long press: " + i + l);
                 return false;
             }
         });
@@ -90,24 +93,19 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        // get user input and set it to inputText
+                                        // Get plate and datetime, store them
                                         long curDateMillis = date.getTime();
                                         String inputText = plateInput.getText().toString();
                                         mPlate.setPlate(inputText);
                                         mPlate.setDatetime(curDateMillis);
                                         mDBHandler.addNewPlate(mPlate);
 
-                                        // Just testing
-                                        //itemsAdapter.notifyDataSetChanged();
-                                        // Not working
-                                        //itemsAdapter.changeCursor(dbContent);
-                                        // works but is it good?
-                                        Intent intent = getIntent();
-                                        finish();
-                                        startActivity(intent);
+                                        // Refresh listView
+                                        dbContent = mDBHandler.readAllPlates();
+                                        itemsAdapter.changeCursor(dbContent);
 
-                                        //Snackbar.make(view, "New plate added!", Snackbar.LENGTH_LONG)
-                                        //       .setAction("Action", null).show();
+                                        Snackbar.make(view, "New plate added", Snackbar.LENGTH_LONG)
+                                               .setAction("Action", null).show();
                                     }
                                 })
 					.setNegativeButton("Cancel",
