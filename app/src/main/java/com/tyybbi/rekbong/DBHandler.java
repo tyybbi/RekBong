@@ -5,13 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 
 public class DBHandler extends SQLiteOpenHelper {
 
-    public static final String TAG = "DBHandler";
     private static final int DATABASE_VERSION = 1;
     protected static final String DATABASE_NAME = "Plates.db";
     private static final String TABLE_plates = "plates";
@@ -33,7 +31,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 KEY_DATE + " INTEGER )";
 
         db.execSQL(sql);
-        Log.i(TAG, "sql: " + sql);
     }
 
     @Override
@@ -61,6 +58,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public Cursor readAllPlates() {
         SQLiteDatabase mDb = this.getReadableDatabase();
 
+        // Read in descending order so that the newly added plate shows up first in ListView
         String sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_ID + " DESC";
         Cursor c = mDb.rawQuery(sql, null);
 
@@ -77,14 +75,14 @@ public class DBHandler extends SQLiteOpenHelper {
         cv.put(KEY_PLATE, plate.getPlate());
         cv.put(KEY_DATE, plate.getDatetime());
 
-        mDb.update(TABLE_plates, cv, "WHERE _id = ? ", strId);
+        mDb.update(TABLE_plates, cv, " WHERE " + KEY_ID + " = ?", strId);
         mDb.close();
     }
 
     public void deletePlate(Plate plate) {
         SQLiteDatabase mDb = this.getWritableDatabase();
         String[] strId = {Integer.toString(plate.getId())};
-        mDb.delete(TABLE_plates, "WHERE _id = ? ", strId);
+        mDb.delete(TABLE_plates, " WHERE " + KEY_ID + " = ?", strId);
         mDb.close();
     }
 }

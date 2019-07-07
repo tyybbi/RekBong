@@ -25,10 +25,9 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
@@ -57,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
+
+        Log.i(TAG, "Spotting percent: " + calculatePercent(listView.getAdapter().getCount()));
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                                         // Get plate and datetime, store them
                                         long curDateMillis = date.getTime();
                                         String inputText = plateInput.getText().toString();
+
                                         mPlate.setPlate(inputText);
                                         mPlate.setDatetime(curDateMillis);
                                         mDBHandler.addNewPlate(mPlate);
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                                         itemsAdapter.changeCursor(dbContent);
 
                                         Snackbar.make(view, "New plate added", Snackbar.LENGTH_LONG)
-                                               .setAction("Action", null).show();
+                                                .setAction("Action", null).show();
                                     }
                                 })
 					.setNegativeButton("Cancel",
@@ -148,6 +150,11 @@ public class MainActivity extends AppCompatActivity {
             dateText.setText(simpleFormat.format(readableDate));
             plateText.setText(plate);
         }
+    }
+
+    public double calculatePercent(double numOfSpottedPlates) {
+        final double total = 999;
+        return (numOfSpottedPlates/total)*100;
     }
 
     @Override
