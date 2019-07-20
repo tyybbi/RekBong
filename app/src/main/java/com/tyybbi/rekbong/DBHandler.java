@@ -14,7 +14,8 @@ public class DBHandler extends SQLiteOpenHelper {
     protected static final String DATABASE_NAME = "Plates.db";
     private static final String TABLE_plates = "plates";
     private static final String KEY_ID = "_id";
-    private static final String KEY_PLATE = "plate";
+    private static final String KEY_LETTER_PART = "letterpart";
+    private static final String KEY_NUMBER_PART = "numberpart";
     private static final String KEY_DATE = "datetime";
 
     public DBHandler(Context context) {
@@ -27,7 +28,8 @@ public class DBHandler extends SQLiteOpenHelper {
         String sql = "CREATE TABLE " +
                 TABLE_plates + "(" +
                 KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                KEY_PLATE + " TEXT NOT NULL, " +
+                KEY_LETTER_PART + " TEXT NOT NULL, " +
+                KEY_NUMBER_PART + " INTEGER NOT NULL, " +
                 KEY_DATE + " INTEGER )";
 
         db.execSQL(sql);
@@ -45,44 +47,52 @@ public class DBHandler extends SQLiteOpenHelper {
     // CRUD Operations
 
     public void addNewPlate(Plate plate) {
-        SQLiteDatabase mDb = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put(KEY_PLATE, plate.getPlate());
+        cv.put(KEY_LETTER_PART, plate.getLetterPart());
+        cv.put(KEY_NUMBER_PART, plate.getNumberPart());
         cv.put(KEY_DATE, plate.getDatetime());
-        mDb.insert(TABLE_plates, null, cv);
+        db.insert(TABLE_plates, null, cv);
 
-        mDb.close();
+        db.close();
     }
     
     public Cursor readAllPlates() {
-        SQLiteDatabase mDb = this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
 
         // Read in descending order so that the newly added plate shows up first in ListView
-        String sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_ID + " DESC";
-        Cursor c = mDb.rawQuery(sql, null);
+        String sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_NUMBER_PART + " DESC";
+        Cursor c = db.rawQuery(sql, null);
 
         return c;
     }
 
 
     public void updatePlate(Plate plate) {
-        SQLiteDatabase mDb = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        mDb.insert(TABLE_plates, null, cv);
+        db.insert(TABLE_plates, null, cv);
         String[] strId = {Integer.toString(plate.getId())};
-        cv.put(KEY_PLATE, plate.getPlate());
+        cv.put(KEY_LETTER_PART, plate.getLetterPart());
+        cv.put(KEY_NUMBER_PART, plate.getNumberPart());
         cv.put(KEY_DATE, plate.getDatetime());
 
-        mDb.update(TABLE_plates, cv, " WHERE " + KEY_ID + " = ?", strId);
-        mDb.close();
+        db.update(TABLE_plates, cv, " WHERE " + KEY_ID + " = ?", strId);
+        db.close();
     }
 
     public void deletePlate(Plate plate) {
-        SQLiteDatabase mDb = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         String[] strId = {Integer.toString(plate.getId())};
-        mDb.delete(TABLE_plates, " WHERE " + KEY_ID + " = ?", strId);
-        mDb.close();
+        db.delete(TABLE_plates, " WHERE " + KEY_ID + " = ?", strId);
+        db.close();
+    }
+
+    public void deleteAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "DELETE FROM " + TABLE_plates;
+        db.execSQL(sql);
     }
 }

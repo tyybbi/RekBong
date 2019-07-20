@@ -1,28 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/addPlateTextView"
+        android:id="@+id/addPlateTitleTv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:gravity="center"
-        android:text="@string/add_new_plate"
-        android:textSize="24sp"
-        />
+        android:text="@string/add_dlg_tv_title"
+        android:textSize="24sp" />
 
-    <EditText
-        android:id="@+id/plateEditText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:gravity="center"
-        android:hint="@string/plate"
-        android:inputType="textCapCharacters"
-        android:maxLength="7" />
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/addPlateLetterPartEt"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="right"
+            android:hint="@string/add_dlg_et_example_lp"
+            android:inputType="textCapCharacters"
+            android:maxLength="3"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/addPlateDashTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_dlg_tv_dash"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/addPlateNumberPartEt"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="@string/add_dlg_et_example_np"
+            android:inputType="numberSigned"
+            android:maxLength="3"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
 </LinearLayout>
+

@@ -2,15 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/listViewRow"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:clickable="true"
+    android:longClickable="true"
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/listViewInner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clickable="false"
+        android:longClickable="true"
         android:orientation="vertical">
 
         <TextView

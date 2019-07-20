@@ -2,15 +2,20 @@ package com.tyybbi.rekbong;
 
 public class Plate {
     private int id;
-    private String plate;
+    private String letterPart;
+    private int numberPart;
     private long datetime;
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setPlate(String plate) {
-        this.plate = plate;
+    public void setLetterPart(String letterPart) {
+        this.letterPart = letterPart;
+    }
+
+    public void setNumberPart(int numberPart) {
+        this.numberPart = numberPart;
     }
 
     public void setDatetime(long datetime) {
@@ -21,8 +26,12 @@ public class Plate {
         return id;
     }
 
-    public String getPlate() {
-        return plate;
+    public String getLetterPart() {
+        return letterPart;
+    }
+
+    public int getNumberPart() {
+        return numberPart;
     }
 
     public long getDatetime() {

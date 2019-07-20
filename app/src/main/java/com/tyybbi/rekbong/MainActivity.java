@@ -3,7 +3,6 @@ package com.tyybbi.rekbong;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -13,7 +12,6 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +23,6 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -34,9 +31,9 @@ import java.text.SimpleDateFormat;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
-    DBHandler mDBHandler;
-    //ArrayList dbContent;
-    Cursor dbContent;
+    private static final String DASH = "-";
+    DBHandler dbHandler;
+    Cursor dbCursor;
     Date date = new Date();
     final Context context = this;
 
@@ -47,24 +44,76 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mDBHandler = new DBHandler(this);
-        //dbContent = mDBHandler.readAllPlates();
-        dbContent = mDBHandler.readAllPlates();
+        dbHandler = new DBHandler(this);
+        dbCursor = dbHandler.readAllPlates();
 
         final CustomCursorAdapter itemsAdapter =
-                new CustomCursorAdapter(this, dbContent);
+                new CustomCursorAdapter(this, dbCursor);
 
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
 
-        Log.i(TAG, "Spotting percent: " + calculatePercent(listView.getAdapter().getCount()));
+        Log.i(TAG, "Spotting percent: " +
+                String.format("%.2f", calculatePercent(listView.getAdapter().getCount())));
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //TODO
-                Log.i(TAG, "Long press: " + i + l);
-                return false;
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
+
+                final Plate plate = new Plate();
+
+                Log.i(TAG, "Long press: pos: " + pos + ", id: " + id);
+                final int position = pos;
+
+                // Alert Dialog stuff
+                LayoutInflater li = LayoutInflater.from(context);
+                View promptsView = li.inflate(R.layout.dialog_editdel_plate, null);
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        context);
+
+                // set prompts.xml to alertdialog builder
+                alertDialogBuilder.setView(promptsView);
+
+                final EditText plateEditdelEt = (EditText) promptsView
+                        .findViewById(R.id.editdelPlateEditText);
+
+                // set dialog message
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.dlg_btn_ok,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //TODO Edit plate
+
+                                        Log.i(TAG, "Edited plate in position " + position);
+                                        //Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
+                                        //        .setAction("Action", null).show();
+                                    }
+                                })
+                        .setNeutralButton(R.string.dlg_btn_delete,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //TODO Delete plate
+
+                                        Log.i(TAG, "Deleted plate in position " + position);
+                                        dialog.cancel();
+                                    }
+                                })
+                        .setNegativeButton(R.string.dlg_btn_cancel,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+
+                return true;
             }
         });
 
@@ -73,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(final View view) {
 
-                final Plate mPlate = new Plate();
+                final Plate plate = new Plate();
 
                 // Alert Dialog stuff
                 LayoutInflater li = LayoutInflater.from(context);
@@ -85,32 +134,55 @@ public class MainActivity extends AppCompatActivity {
 				// set prompts.xml to alertdialog builder
 				alertDialogBuilder.setView(promptsView);
 
-				final EditText plateInput = (EditText) promptsView
-						.findViewById(R.id.plateEditText);
+				final EditText plateLetterPartInputEt = (EditText) promptsView
+						.findViewById(R.id.addPlateLetterPartEt);
+
+				final EditText plateNumberPartInputEt = (EditText) promptsView
+                       .findViewById(R.id.addPlateNumberPartEt);
 
 				// set dialog message
 				alertDialogBuilder
                         .setCancelable(false)
-                        .setPositiveButton("OK",
+                        .setPositiveButton(R.string.dlg_btn_ok,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+                                        boolean success = true;
+
                                         // Get plate and datetime, store them
-                                        long curDateMillis = date.getTime();
-                                        String inputText = plateInput.getText().toString();
+                                        long currentDateMS = date.getTime();
+                                        String inputLP = plateLetterPartInputEt.getText().toString();
+                                        String inputNP = plateNumberPartInputEt.getText().toString();
 
-                                        mPlate.setPlate(inputText);
-                                        mPlate.setDatetime(curDateMillis);
-                                        mDBHandler.addNewPlate(mPlate);
+                                        if (inputLP.equals("") || inputNP.equals("")) {
+                                            success = false;
+                                            Snackbar.make(view, R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+                                        } else {
+                                            try {
+                                                int NP_as_int = Integer.parseInt(inputNP);
+                                                plate.setNumberPart(NP_as_int);
+                                                plate.setLetterPart(inputLP);
+                                            } catch (NumberFormatException e) {
+                                                success = false;
+                                                Snackbar.make(view, R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
+                                                        .setAction("Action", null).show();
+                                            }
+                                        }
 
-                                        // Refresh listView
-                                        dbContent = mDBHandler.readAllPlates();
-                                        itemsAdapter.changeCursor(dbContent);
+                                        if (success) {
+                                            plate.setDatetime(currentDateMS);
+                                            dbHandler.addNewPlate(plate);
 
-                                        Snackbar.make(view, "New plate added", Snackbar.LENGTH_LONG)
-                                                .setAction("Action", null).show();
+                                            // Refresh listView
+                                            dbCursor = dbHandler.readAllPlates();
+                                            itemsAdapter.changeCursor(dbCursor);
+
+                                            Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+                                        }
                                     }
                                 })
-					.setNegativeButton("Cancel",
+					.setNegativeButton(R.string.dlg_btn_cancel,
 					  new DialogInterface.OnClickListener() {
 					    public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
@@ -141,20 +213,66 @@ public class MainActivity extends AppCompatActivity {
             TextView dateText = (TextView) view.findViewById(R.id.listViewDateText);
             TextView plateText = (TextView) view.findViewById(R.id.listViewPlateText);
             // Extract properties from cursor
-            long dateM = cursor.getLong(cursor.getColumnIndexOrThrow("datetime"));
-            String plate = cursor.getString(cursor.getColumnIndexOrThrow("plate"));
+            long dateMS = cursor.getLong(cursor.getColumnIndexOrThrow("datetime"));
+            String letterPart = cursor.getString(cursor.getColumnIndexOrThrow("letterpart"));
+            int numberPart = cursor.getInt(cursor.getColumnIndexOrThrow("numberpart"));
             // Populate fields with extracted properties
             DateFormat simpleFormat = new SimpleDateFormat("d.M.yyyy HH:mm");
-            Date readableDate = new Date(dateM);
+            Date readableDate = new Date(dateMS);
+            String plate = letterPart + DASH + String.valueOf(numberPart);
 
             dateText.setText(simpleFormat.format(readableDate));
             plateText.setText(plate);
         }
     }
 
-    public double calculatePercent(double numOfSpottedPlates) {
+    private double calculatePercent(double spottedPlates) {
         final double total = 999;
-        return (numOfSpottedPlates/total)*100;
+        return (spottedPlates / total) * 100;
+    }
+
+    public void deleteDB() {
+        // Alert Dialog stuff
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.dialog_deletedb, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        final CustomCursorAdapter itemsAdapter =
+                new CustomCursorAdapter(this, dbCursor);
+
+        //ListView listView = (ListView) findViewById(R.id.listView);
+        //listView.setAdapter(itemsAdapter);
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(R.string.dlg_btn_yes,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dbHandler.deleteAll();
+                                //TODO Update screen too
+                                itemsAdapter.changeCursor(dbCursor);
+
+                                //Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
+                                //        .setAction("Action", null).show();
+                            }
+                        })
+                .setNegativeButton(R.string.dlg_btn_no,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 
     @Override
@@ -172,10 +290,18 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_deletedb:
+                deleteDB();
+                return true;
+            case R.id.action_settings:
+                //showSettings();
+                return true;
+            case R.id.action_about:
+                //showAbout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }

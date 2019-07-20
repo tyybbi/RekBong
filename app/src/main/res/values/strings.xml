@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">RekBong</string>
+    <string name="action_deletedb">Delete database</string>
     <string name="action_settings">Settings</string>
-    <string name="plate">Ex. YYZ-202</string>
-    <string name="add_new_plate">Add new plate</string>
+    <string name="action_about">About</string>
+    <string name="add_dlg_et_example_lp">ABC</string>
+    <string name="add_dlg_et_example_np">123</string>
+    <string name="add_dlg_tv_title">Add new plate</string>
+    <string name="add_dlg_tv_dash">-</string>
+    <string name="editdel_dlg_tv_title">Edit/Delete plate</string>
+    <string name="deletedb_title_tv">Really delete database?</string>
+    <string name="dlg_btn_ok">OK</string>
+    <string name="dlg_btn_yes">Yes</string>
+    <string name="dlg_btn_delete">Delete</string>
+    <string name="dlg_btn_cancel">Cancel</string>
+    <string name="dlg_btn_no">No</string>
+    <string name="snackbar_add">New plate added</string>
+    <string name="snackbar_empty_field">Empty input field. Aborting</string>
+    <string name="snackbar_not_int">Plate number not an integer. Aborting</string>
 </resources>
