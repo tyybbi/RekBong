@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         dbHandler = new DBHandler(this);
-        dbCursor = dbHandler.readAllPlates();
+        dbCursor = dbHandler.getAllPlates();
 
         final CustomCursorAdapter itemsAdapter =
                 new CustomCursorAdapter(this, dbCursor);
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.updatePlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.readAllPlates();
+                                            dbCursor = dbHandler.getAllPlates();
                                             itemsAdapter.changeCursor(dbCursor);
 
                                             Snackbar.make(view, R.string.snackbar_edit, Snackbar.LENGTH_LONG)
@@ -130,10 +130,12 @@ public class MainActivity extends AppCompatActivity {
                         .setNeutralButton(R.string.dlg_btn_delete,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        //TODO Delete plate
+                                        dbHandler.deletePlate(plate);
+                                        dbCursor = dbHandler.getAllPlates();
+                                        itemsAdapter.changeCursor(dbCursor);
 
-                                        Log.i(TAG, "Deleted plate in position " + position);
-                                        dialog.cancel();
+                                        Snackbar.make(view, R.string.snackbar_delete, Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
                                     }
                                 })
                         .setNegativeButton(R.string.dlg_btn_cancel,
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.addNewPlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.readAllPlates();
+                                            dbCursor = dbHandler.getAllPlates();
                                             itemsAdapter.changeCursor(dbCursor);
 
                                             Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
@@ -276,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
         DBHandler lDbHandler;
         Cursor newc;
         lDbHandler = new DBHandler(this);
-        newc = lDbHandler.readAllPlates();
+        newc = lDbHandler.getAllPlates();
 
         CustomCursorAdapter itemsAdapter =
                 new CustomCursorAdapter(this, newc);

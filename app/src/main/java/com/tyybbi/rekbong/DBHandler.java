@@ -56,7 +56,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
     
-    public Cursor readAllPlates() {
+    public Cursor getAllPlates() {
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Read in descending order so that the newly added plate shows up first in ListView
