@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, final View view, int pos, long id) {
 
-                Plate plate = new Plate();
+                final Plate plate;
 
                 Log.i(TAG, "Long press: pos: " + pos + ", id: " + id);
                 final int position = pos;
@@ -91,11 +91,40 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.dlg_btn_ok,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        //TODO Edit plate
-                                        Log.i(TAG, "Edited plate in position " + position);
+                                        //TODO Don't update if no plate fields are changed
+                                        boolean success = true;
 
-                                        //Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
-                                        //        .setAction("Action", null).show();
+                                        String inputLP = plateEditLPEt.getText().toString();
+                                        String inputNP = plateEditNPEt.getText().toString();
+
+                                        if (inputLP.equals("") || inputNP.equals("")) {
+                                            success = false;
+                                            Snackbar.make(view, R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+                                        } else {
+                                            try {
+                                                int NP_as_int = Integer.parseInt(inputNP);
+                                                plate.setNumberPart(NP_as_int);
+                                                plate.setLetterPart(inputLP);
+                                            } catch (NumberFormatException e) {
+                                                success = false;
+                                                Snackbar.make(view, R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
+                                                        .setAction("Action", null).show();
+                                            }
+                                        }
+
+                                        if (success) {
+                                            plate.setId(plate.getId());
+                                            plate.setDatetime(plate.getDatetime());
+                                            dbHandler.updatePlate(plate);
+
+                                            // Refresh listView
+                                            dbCursor = dbHandler.readAllPlates();
+                                            itemsAdapter.changeCursor(dbCursor);
+
+                                            Snackbar.make(view, R.string.snackbar_edit, Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+                                        }
                                     }
                                 })
                         .setNeutralButton(R.string.dlg_btn_delete,
