@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-
 public class DBHandler extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
@@ -68,6 +66,22 @@ public class DBHandler extends SQLiteOpenHelper {
         return c;
     }
 
+    public Plate getPlate(long id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String sql = "SELECT * FROM " + TABLE_plates + " WHERE " + KEY_ID + " = " + id;
+        Cursor c = db.rawQuery(sql, null);
+        if (c != null)
+            c.moveToFirst();
+
+        Plate plate = new Plate();
+        plate.setId(c.getInt(0));
+        plate.setLetterPart(c.getString(1));
+        plate.setNumberPart(c.getInt(2));
+        plate.setDatetime(c.getLong(3));
+
+        return plate;
+    }
 
     public void updatePlate(Plate plate) {
         SQLiteDatabase db = this.getWritableDatabase();

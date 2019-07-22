@@ -22,6 +22,7 @@
             android:capitalize="characters"
             android:clickable="false"
             android:gravity="center"
+            android:inputType="textNoSuggestions"
             android:text="TextView"
             android:textSize="18sp"
             android:textStyle="bold" />

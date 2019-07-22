@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/addPlateDlgLLayout"
+    android:id="@+id/editDlgLLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,23 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center"
-        android:text="@string/add_dlg_tv_title"
+        android:text="@string/edit_dlg_tv_title"
         android:textSize="24sp" />
 
     <LinearLayout
-        android:id="@+id/addPlateDlgHorLLayout"
+        android:id="@+id/editDlgHorLLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/addPlateLetterPartEt"
+            android:id="@+id/editPlateLetterPartEt"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="right"
-            android:hint="@string/add_dlg_et_example_lp"
             android:inputType="textCapCharacters"
             android:maxLength="3"
             android:textStyle="bold" />
@@ -40,12 +39,11 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/addPlateNumberPartEt"
+            android:id="@+id/editPlateNumberPartEt"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="left"
-            android:hint="@string/add_dlg_et_example_np"
             android:inputType="numberSigned"
             android:maxLength="3"
             android:textStyle="bold" />
@@ -53,4 +51,3 @@
     </LinearLayout>
 
 </LinearLayout>
-

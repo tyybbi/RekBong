@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Cursor dbCursor;
     Date date = new Date();
     final Context context = this;
+    String spotPercent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,21 +54,21 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
 
-        Log.i(TAG, "Spotting percent: " +
-                String.format("%.2f", calculatePercent(listView.getAdapter().getCount())));
+        spotPercent = String.format("%.2f", calculatePercent(listView.getAdapter().getCount()));
+        Log.i(TAG, spotPercent);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
 
-                final Plate plate = new Plate();
+                Plate plate = new Plate();
 
                 Log.i(TAG, "Long press: pos: " + pos + ", id: " + id);
                 final int position = pos;
 
                 // Alert Dialog stuff
                 LayoutInflater li = LayoutInflater.from(context);
-                View promptsView = li.inflate(R.layout.dialog_editdel_plate, null);
+                View promptsView = li.inflate(R.layout.dialog_edit_plate, null);
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                         context);
@@ -75,8 +76,14 @@ public class MainActivity extends AppCompatActivity {
                 // set prompts.xml to alertdialog builder
                 alertDialogBuilder.setView(promptsView);
 
-                final EditText plateEditdelEt = (EditText) promptsView
-                        .findViewById(R.id.editdelPlateEditText);
+                final EditText plateEditLPEt = (EditText) promptsView
+                        .findViewById(R.id.editPlateLetterPartEt);
+                final EditText plateEditNPEt = (EditText) promptsView
+                        .findViewById(R.id.editPlateNumberPartEt);
+
+                plate = dbHandler.getPlate(id);
+                plateEditLPEt.setText(plate.getLetterPart());
+                plateEditNPEt.setText(String.valueOf(plate.getNumberPart()));
 
                 // set dialog message
                 alertDialogBuilder
@@ -85,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         //TODO Edit plate
-
                                         Log.i(TAG, "Edited plate in position " + position);
+
                                         //Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
                                         //        .setAction("Action", null).show();
                                     }
@@ -231,6 +238,26 @@ public class MainActivity extends AppCompatActivity {
         return (spottedPlates / total) * 100;
     }
 
+    public void showAbout() {
+        //TODO Some kind of info dialog
+        lvRefresher();
+    }
+
+    public void lvRefresher() {
+        DBHandler lDbHandler;
+        Cursor newc;
+        lDbHandler = new DBHandler(this);
+        newc = lDbHandler.readAllPlates();
+
+        CustomCursorAdapter itemsAdapter =
+                new CustomCursorAdapter(this, newc);
+        ListView listView = findViewById(R.id.listView);
+        listView.setAdapter(itemsAdapter);
+        spotPercent = String.format("%.2f", calculatePercent(listView.getAdapter().getCount()));
+        Log.i(TAG, spotPercent);
+        itemsAdapter.swapCursor(newc);
+    }
+
     public void deleteDB() {
         // Alert Dialog stuff
         LayoutInflater li = LayoutInflater.from(context);
@@ -242,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
         final CustomCursorAdapter itemsAdapter =
                 new CustomCursorAdapter(this, dbCursor);
 
-        //ListView listView = (ListView) findViewById(R.id.listView);
-        //listView.setAdapter(itemsAdapter);
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(itemsAdapter);
 
         // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView);
@@ -255,7 +282,8 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 dbHandler.deleteAll();
                                 //TODO Update screen too
-                                itemsAdapter.changeCursor(dbCursor);
+                                //itemsAdapter.changeCursor(dbCursor);
+                                lvRefresher();
 
                                 //Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
                                 //        .setAction("Action", null).show();
@@ -298,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 //showSettings();
                 return true;
             case R.id.action_about:
-                //showAbout();
+                showAbout();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -7,7 +7,7 @@
     <string name="add_dlg_et_example_np">123</string>
     <string name="add_dlg_tv_title">Add new plate</string>
     <string name="add_dlg_tv_dash">-</string>
-    <string name="editdel_dlg_tv_title">Edit/Delete plate</string>
+    <string name="edit_dlg_tv_title">Edit plate</string>
     <string name="deletedb_title_tv">Really delete database?</string>
     <string name="dlg_btn_ok">OK</string>
     <string name="dlg_btn_yes">Yes</string>
