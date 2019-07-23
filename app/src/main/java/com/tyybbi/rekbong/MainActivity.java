@@ -374,12 +374,12 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.action_deletedb:
+            /*case R.id.action_deletedb:
                 deleteDB();
                 return true;
             case R.id.action_settings:
                 //showSettings();
-                return true;
+                return true;*/
             case R.id.action_about:
                 showAbout();
                 return true;
