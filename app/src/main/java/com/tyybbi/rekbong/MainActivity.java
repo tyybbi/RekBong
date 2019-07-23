@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView gitTv = promptsView
                 .findViewById(R.id.aboutDlgGitTv);
 
-        progressTv.setText(spotPercent);
+        progressTv.setText(spotPercent + "% of plates spotted!");
         versionTv.setText(VERSION_NAME);
         gitTv.setText(R.string.about_dlg_git);
 

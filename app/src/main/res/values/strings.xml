@@ -19,8 +19,8 @@
     <string name="snackbar_delete">Deleted plate successfully</string>
     <string name="snackbar_empty_field">Empty input field. Aborting</string>
     <string name="snackbar_not_int">Plate number not an integer. Aborting</string>
-    <string name="about_dlg_progress1">Progress:</string>
-    <string name="about_dlg_progress2">TextView</string>
-    <string name="about_dlg_version1">Version:</string>
+    <string name="about_dlg_progress1">Progress</string>
+    <string name="about_dlg_version1">Version</string>
     <string name="about_dlg_git">https://github.com/tyybbi/RekBong</string>
+    <string name="about_dlg_www">WWW</string>
 </resources>

@@ -27,9 +27,11 @@
 
         <TextView
             android:id="@+id/aboutDlgPercentValTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/about_dlg_progress2" />
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -47,8 +49,11 @@
 
         <TextView
             android:id="@+id/aboutDlgVersionValTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -59,11 +64,20 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/aboutDlgGitTv"
+            android:id="@+id/aboutDlgWWWTv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/about_dlg_git" />
+            android:text="@string/about_dlg_www" />
+
+        <TextView
+            android:id="@+id/aboutDlgGitTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:text="@string/about_dlg_git"
+            android:textAllCaps="false" />
     </LinearLayout>
 
 </LinearLayout>
