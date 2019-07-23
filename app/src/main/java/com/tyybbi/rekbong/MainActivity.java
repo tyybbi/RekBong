@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String DASH = "-";
     DBHandler dbHandler;
     Cursor dbCursor;
-    Date date = new Date();
     final Context context = this;
     String spotPercent;
 
@@ -181,9 +180,9 @@ public class MainActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         boolean success = true;
+                                        Date date = new Date();
 
-                                        // Get plate and datetime, store them
-                                        long currentDateMS = date.getTime();
+                                        // Get plate parts and store them
                                         String inputLP = plateLetterPartInputEt.getText().toString();
                                         String inputNP = plateNumberPartInputEt.getText().toString();
 
@@ -204,7 +203,8 @@ public class MainActivity extends AppCompatActivity {
                                         }
 
                                         if (success) {
-                                            plate.setDatetime(currentDateMS);
+                                            // Store datetime
+                                            plate.setDatetime(date.getTime());
                                             dbHandler.addNewPlate(plate);
 
                                             // Refresh listView
