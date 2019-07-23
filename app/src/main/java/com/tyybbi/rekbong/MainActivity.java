@@ -31,6 +31,8 @@ import java.text.SimpleDateFormat;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
+    public static final String VERSION_NAME = "0.1.0";
+    public static final int VERSION_CODE = 150000100;
     private static final String DASH = "-";
     DBHandler dbHandler;
     Cursor dbCursor;
@@ -51,20 +53,14 @@ public class MainActivity extends AppCompatActivity {
         final CustomCursorAdapter itemsAdapter =
                 new CustomCursorAdapter(this, dbCursor);
 
-        ListView listView = (ListView) findViewById(R.id.listView);
+        ListView listView = findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
-
-        spotPercent = String.format("%.2f", calculatePercent(listView.getAdapter().getCount()));
-        Log.i(TAG, spotPercent);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, final View view, int pos, long id) {
 
                 final Plate plate;
-
-                Log.i(TAG, "Long press: pos: " + pos + ", id: " + id);
-                final int position = pos;
 
                 // Alert Dialog stuff
                 LayoutInflater li = LayoutInflater.from(context);
@@ -76,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 // set prompts.xml to alertdialog builder
                 alertDialogBuilder.setView(promptsView);
 
-                final EditText plateEditLPEt = (EditText) promptsView
+                final EditText plateEditLPEt = promptsView
                         .findViewById(R.id.editPlateLetterPartEt);
-                final EditText plateEditNPEt = (EditText) promptsView
+                final EditText plateEditNPEt = promptsView
                         .findViewById(R.id.editPlateNumberPartEt);
 
                 plate = dbHandler.getPlate(id);
@@ -172,10 +168,10 @@ public class MainActivity extends AppCompatActivity {
 				// set prompts.xml to alertdialog builder
 				alertDialogBuilder.setView(promptsView);
 
-				final EditText plateLetterPartInputEt = (EditText) promptsView
+				final EditText plateLetterPartInputEt = promptsView
 						.findViewById(R.id.addPlateLetterPartEt);
 
-				final EditText plateNumberPartInputEt = (EditText) promptsView
+				final EditText plateNumberPartInputEt = promptsView
                        .findViewById(R.id.addPlateNumberPartEt);
 
 				// set dialog message
@@ -248,8 +244,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void bindView (View view, Context context, Cursor cursor){
-            TextView dateText = (TextView) view.findViewById(R.id.listViewDateText);
-            TextView plateText = (TextView) view.findViewById(R.id.listViewPlateText);
+            TextView dateText = view.findViewById(R.id.listViewDateText);
+            TextView plateText = view.findViewById(R.id.listViewPlateText);
             // Extract properties from cursor
             long dateMS = cursor.getLong(cursor.getColumnIndexOrThrow("datetime"));
             String letterPart = cursor.getString(cursor.getColumnIndexOrThrow("letterpart"));
@@ -270,23 +266,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showAbout() {
-        //TODO Some kind of info dialog
-        lvRefresher();
+        ListView listView = findViewById(R.id.listView);
+        spotPercent = String.format("%.1f", calculatePercent(listView.getAdapter().getCount()));
+
+        // Alert Dialog stuff
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.dialog_about, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final TextView progressTv = promptsView
+                .findViewById(R.id.aboutDlgPercentValTv);
+
+        final TextView versionTv = promptsView
+                .findViewById(R.id.aboutDlgVersionValTv);
+
+        final TextView gitTv = promptsView
+                .findViewById(R.id.aboutDlgGitTv);
+
+        progressTv.setText(spotPercent);
+        versionTv.setText(VERSION_NAME);
+        gitTv.setText(R.string.about_dlg_git);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(R.string.dlg_btn_ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     public void lvRefresher() {
-        DBHandler lDbHandler;
-        Cursor newc;
-        lDbHandler = new DBHandler(this);
-        newc = lDbHandler.getAllPlates();
-
+        dbCursor = dbHandler.getAllPlates();
         CustomCursorAdapter itemsAdapter =
-                new CustomCursorAdapter(this, newc);
+                new CustomCursorAdapter(this, dbCursor);
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
-        spotPercent = String.format("%.2f", calculatePercent(listView.getAdapter().getCount()));
-        Log.i(TAG, spotPercent);
-        itemsAdapter.swapCursor(newc);
+        itemsAdapter.changeCursor(dbCursor);
     }
 
     public void deleteDB() {
@@ -300,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
         final CustomCursorAdapter itemsAdapter =
                 new CustomCursorAdapter(this, dbCursor);
 
-        ListView listView = (ListView) findViewById(R.id.listView);
+        ListView listView = findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
 
         // set prompts.xml to alertdialog builder
