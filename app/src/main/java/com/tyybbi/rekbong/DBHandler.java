@@ -26,7 +26,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String sql = "CREATE TABLE " +
                 TABLE_plates + "(" +
                 KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                KEY_LETTER_PART + " TEXT NOT NULL, " +
+                KEY_LETTER_PART + " TEXT, " +
                 KEY_NUMBER_PART + " INTEGER NOT NULL, " +
                 KEY_DATE + " INTEGER )";
 

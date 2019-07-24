@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_dlg_progress1">Edistys</string>
+    <string name="about_dlg_progress2">% kilvistä bongattu!</string>
+    <string name="about_dlg_version1">Sovellusversio</string>
+    <string name="action_about">Tietoja</string>
+    <string name="action_deletedb">Poista tietokanta</string>
+    <string name="action_settings">Asetukset</string>
+    <string name="add_dlg_tv_title">Lisää uusi kilpi</string>
+    <string name="deletedb_title_tv">Haluatko varmasti poistaa tietokannan?</string>
+    <string name="dlg_btn_cancel">Kumoa</string>
+    <string name="dlg_btn_delete">Poista</string>
+    <string name="dlg_btn_no">Ei</string>
+    <string name="dlg_btn_save">Tallenna</string>
+    <string name="dlg_btn_yes">Kyllä</string>
+    <string name="edit_dlg_tv_title">Muokkaa kilpeä</string>
+    <string name="snackbar_add">Uusi kilpi lisätty</string>
+    <string name="snackbar_delete">Kilven poisto onnistui</string>
+    <string name="snackbar_edit">Kilven muokkaus onnistui</string>
+    <string name="snackbar_empty_field">Tyhjä syöttökenttä. Keskeytetään</string>
+    <string name="snackbar_not_int">Kilven numero-osa virheellinen. Keskeytetään</string>
+</resources>

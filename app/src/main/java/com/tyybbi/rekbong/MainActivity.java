@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String VERSION_NAME = "0.1.0";
     public static final int VERSION_CODE = 150000100;
     private static final String DASH = "-";
+    private static final String SPACE = " ";
     DBHandler dbHandler;
     Cursor dbCursor;
     final Context context = this;
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                                         String inputLP = plateEditLPEt.getText().toString();
                                         String inputNP = plateEditNPEt.getText().toString();
 
-                                        if (inputLP.equals("") || inputNP.equals("")) {
+                                        if (inputNP.equals("")) {
                                             success = false;
                                             Snackbar.make(view, R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 				// set dialog message
 				alertDialogBuilder
                         .setCancelable(false)
-                        .setPositiveButton(R.string.dlg_btn_ok,
+                        .setPositiveButton(R.string.dlg_btn_save,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         boolean success = true;
@@ -186,7 +187,8 @@ public class MainActivity extends AppCompatActivity {
                                         String inputLP = plateLetterPartInputEt.getText().toString();
                                         String inputNP = plateNumberPartInputEt.getText().toString();
 
-                                        if (inputLP.equals("") || inputNP.equals("")) {
+                                        // Allow empty letterPart since only the numbers matter
+                                        if (inputNP.equals("")) {
                                             success = false;
                                             Snackbar.make(view, R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
@@ -276,7 +278,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
 
-        // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView);
 
         final TextView progressTv = promptsView
@@ -288,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView gitTv = promptsView
                 .findViewById(R.id.aboutDlgGitTv);
 
-        progressTv.setText(spotPercent + "% of plates spotted!");
+        progressTv.setText(spotPercent + SPACE + getString(R.string.about_dlg_progress2));
         versionTv.setText(VERSION_NAME);
         gitTv.setText(R.string.about_dlg_git);
 
