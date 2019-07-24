@@ -16,7 +16,7 @@
     <string name="edit_dlg_tv_title">Redaktu</string>
     <string name="snackbar_add">Nova plato aldonita</string>
     <string name="snackbar_delete">Plato forigita sukcese</string>
-    <string name="snackbar_edit">Plato aktualigita sukcese</string>
+    <string name="snackbar_edit">Plato redaktita sukcese</string>
     <string name="snackbar_empty_field">Malplena enigokampo. Ĉesita</string>
     <string name="snackbar_not_int">Platnumero ne estas ĉifero. Ĉesita</string>
 </resources>
