@@ -19,4 +19,5 @@
     <string name="snackbar_edit">Plato redaktita sukcese</string>
     <string name="snackbar_empty_field">Malplena enigokampo. Ĉesita</string>
     <string name="snackbar_not_int">Platnumero ne estas ĉifero. Ĉesita</string>
+    <string name="settings_dlg_sb_sort">Inversa ordigordo</string>
 </resources>

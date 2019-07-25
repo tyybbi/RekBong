@@ -3,6 +3,7 @@ package com.tyybbi.rekbong;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -19,9 +20,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -32,13 +35,16 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
     public static final String VERSION_NAME = "0.1.0";
+    public static final String APP_PREFS = "RBPrefs";
+    public static final String SORT_PREF = "reverse";
     public static final int VERSION_CODE = 150000100;
     private static final String DASH = "-";
     private static final String SPACE = " ";
+    SharedPreferences prefs;
+    boolean reverse;
     DBHandler dbHandler;
     Cursor dbCursor;
     final Context context = this;
-    String spotPercent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +53,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        prefs = getSharedPreferences(APP_PREFS, MODE_PRIVATE);
+        reverse = prefs.getBoolean(SORT_PREF, false);
+
+        // TODO listView refreshing after setting change
         dbHandler = new DBHandler(this);
-        dbCursor = dbHandler.getAllPlates();
+        dbCursor = dbHandler.getAllPlates(reverse);
 
         final CustomCursorAdapter itemsAdapter =
                 new CustomCursorAdapter(this, dbCursor);
@@ -115,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.updatePlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.getAllPlates();
+                                            dbCursor = dbHandler.getAllPlates(reverse);
                                             itemsAdapter.changeCursor(dbCursor);
 
                                             Snackbar.make(view, R.string.snackbar_edit, Snackbar.LENGTH_LONG)
@@ -127,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dbHandler.deletePlate(plate);
-                                        dbCursor = dbHandler.getAllPlates();
+                                        dbCursor = dbHandler.getAllPlates(reverse);
                                         itemsAdapter.changeCursor(dbCursor);
 
                                         Snackbar.make(view, R.string.snackbar_delete, Snackbar.LENGTH_LONG)
@@ -210,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.addNewPlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.getAllPlates();
+                                            dbCursor = dbHandler.getAllPlates(reverse);
                                             itemsAdapter.changeCursor(dbCursor);
 
                                             Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
@@ -267,9 +277,51 @@ public class MainActivity extends AppCompatActivity {
         return (spottedPlates / total) * 100;
     }
 
+    public void showSettings() {
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.dialog_settings, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        alertDialogBuilder.setView(promptsView);
+
+        final Switch sortCb = promptsView.findViewById(R.id.settingsDlgSortSb);
+        sortCb.setChecked(prefs.getBoolean(SORT_PREF, false));
+        sortCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    prefs.edit().putBoolean(SORT_PREF, isChecked).apply();
+                    reverse = true;
+                } else {
+                    prefs.edit().putBoolean(SORT_PREF, isChecked).apply();
+                    reverse = false;
+                }
+            }
+        });
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(R.string.dlg_btn_ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        })
+                .setNegativeButton(R.string.dlg_btn_cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     public void showAbout() {
         ListView listView = findViewById(R.id.listView);
-        spotPercent = String.format("%.1f", calculatePercent(listView.getAdapter().getCount()));
+        String spotPercent = String.format("%.1f", calculatePercent(listView.getAdapter().getCount()));
 
         // Alert Dialog stuff
         LayoutInflater li = LayoutInflater.from(context);
@@ -306,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void lvRefresher() {
-        dbCursor = dbHandler.getAllPlates();
+        dbCursor = dbHandler.getAllPlates(reverse);
         CustomCursorAdapter itemsAdapter =
                 new CustomCursorAdapter(this, dbCursor);
         ListView listView = findViewById(R.id.listView);
@@ -377,10 +429,10 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             /*case R.id.action_deletedb:
                 deleteDB();
-                return true;
-            case R.id.action_settings:
-                //showSettings();
                 return true;*/
+            case R.id.action_settings:
+                showSettings();
+                return true;
             case R.id.action_about:
                 showAbout();
                 return true;

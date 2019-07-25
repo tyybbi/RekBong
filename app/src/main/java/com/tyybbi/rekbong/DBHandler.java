@@ -56,11 +56,17 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
     
-    public Cursor getAllPlates() {
+    public Cursor getAllPlates(boolean reverse) {
         SQLiteDatabase db = this.getReadableDatabase();
+        String sql;
 
-        // Read in descending order so that the newly added plate shows up first in ListView
-        String sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_NUMBER_PART + " DESC";
+        if (!reverse) {
+            // Read in descending order so that the newly added plate shows up first in ListView
+            sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_NUMBER_PART + " DESC";
+        } else {
+            // Reverse spotting order, ie. from 999 to 1
+            sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_NUMBER_PART;
+        }
         Cursor c = db.rawQuery(sql, null);
 
         return c;
