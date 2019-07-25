@@ -34,7 +34,7 @@ import java.text.SimpleDateFormat;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
-    public static final String VERSION_NAME = "0.1.1";
+    public static final String VERSION_NAME = "0.1.2";
     public static final String APP_PREFS = "RBPrefs";
     public static final String SORT_PREF = "reverse";
     public static final int VERSION_CODE = 150000100;
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         if (inputNP.equals("")) {
                                             success = false;
-                                            Snackbar.make(findViewById(R.id.listView), R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         } else {
                                             try {
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                                                 plate.setLetterPart(inputLP);
                                             } catch (NumberFormatException e) {
                                                 success = false;
-                                                Snackbar.make(findViewById(R.id.listView), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
+                                                Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
                                             }
                                         }
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbCursor = dbHandler.getAllPlates(reverse);
                                             itemsAdapter.changeCursor(dbCursor);
 
-                                            Snackbar.make(findViewById(R.id.listView), R.string.snackbar_edit, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_edit, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         }
                                     }
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                                         dbCursor = dbHandler.getAllPlates(reverse);
                                         itemsAdapter.changeCursor(dbCursor);
 
-                                        Snackbar.make(findViewById(R.id.listView), R.string.snackbar_delete, Snackbar.LENGTH_LONG)
+                                        Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_delete, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
                                     }
                                 })
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                                         // Allow empty letterPart since only the numbers matter
                                         if (inputNP.equals("")) {
                                             success = false;
-                                            Snackbar.make(findViewById(R.id.listView), R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         } else {
                                             try {
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                                                 plate.setLetterPart(inputLP);
                                             } catch (NumberFormatException e) {
                                                 success = false;
-                                                Snackbar.make(findViewById(R.id.listView), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
+                                                Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
                                             }
                                         }
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbCursor = dbHandler.getAllPlates(reverse);
                                             itemsAdapter.changeCursor(dbCursor);
 
-                                            Snackbar.make(findViewById(R.id.listView), R.string.snackbar_add, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_add, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         }
                                     }
