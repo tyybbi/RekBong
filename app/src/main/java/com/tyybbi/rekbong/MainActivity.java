@@ -307,13 +307,7 @@ public class MainActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                             }
-                        })
-                .setNegativeButton(R.string.dlg_btn_cancel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                        });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
@@ -357,15 +351,6 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void lvRefresher() {
-        dbCursor = dbHandler.getAllPlates(reverse);
-        CustomCursorAdapter itemsAdapter =
-                new CustomCursorAdapter(this, dbCursor);
-        ListView listView = findViewById(R.id.listView);
-        listView.setAdapter(itemsAdapter);
-        itemsAdapter.changeCursor(dbCursor);
-    }
-
     public void deleteDB() {
         // Alert Dialog stuff
         LayoutInflater li = LayoutInflater.from(context);
@@ -391,7 +376,6 @@ public class MainActivity extends AppCompatActivity {
                                 dbHandler.deleteAll();
                                 //TODO Update screen too
                                 //itemsAdapter.changeCursor(dbCursor);
-                                lvRefresher();
 
                                 //Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
                                 //        .setAction("Action", null).show();
