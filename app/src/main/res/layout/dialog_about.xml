@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/about_dlg_version1"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/aboutDlgVersionValTv"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:gravity="center"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/about_dlg_www"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/aboutDlgGitTv"
@@ -87,7 +87,7 @@
             android:gravity="center"
             android:text="@string/about_dlg_git"
             android:textAllCaps="false"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>

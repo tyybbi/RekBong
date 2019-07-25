@@ -52,8 +52,6 @@ public class DBHandler extends SQLiteOpenHelper {
         cv.put(KEY_NUMBER_PART, plate.getNumberPart());
         cv.put(KEY_DATE, plate.getDatetime());
         db.insert(TABLE_plates, null, cv);
-
-        db.close();
     }
     
     public Cursor getAllPlates(boolean reverse) {
@@ -99,14 +97,12 @@ public class DBHandler extends SQLiteOpenHelper {
         cv.put(KEY_DATE, plate.getDatetime());
 
         db.update(TABLE_plates, cv,  KEY_ID + " = ?", strId);
-        db.close();
     }
 
     public void deletePlate(Plate plate) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] strId = {Integer.toString(plate.getId())};
         db.delete(TABLE_plates, KEY_ID + " = ?", strId);
-        db.close();
     }
 
     public void deleteAll() {

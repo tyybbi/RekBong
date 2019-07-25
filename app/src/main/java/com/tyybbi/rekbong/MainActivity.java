@@ -34,7 +34,7 @@ import java.text.SimpleDateFormat;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
-    public static final String VERSION_NAME = "0.1.0";
+    public static final String VERSION_NAME = "0.1.1";
     public static final String APP_PREFS = "RBPrefs";
     public static final String SORT_PREF = "reverse";
     public static final int VERSION_CODE = 150000100;
@@ -68,10 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, final View view, int pos, long id) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
 
                 final Plate plate;
 
+                //FIXME Crashes occasionally
                 // Alert Dialog stuff
                 LayoutInflater li = LayoutInflater.from(context);
                 View promptsView = li.inflate(R.layout.dialog_edit_plate, null);
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         if (inputNP.equals("")) {
                                             success = false;
-                                            Snackbar.make(view, R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(R.id.listView), R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         } else {
                                             try {
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                                                 plate.setLetterPart(inputLP);
                                             } catch (NumberFormatException e) {
                                                 success = false;
-                                                Snackbar.make(view, R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
+                                                Snackbar.make(findViewById(R.id.listView), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
                                             }
                                         }
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbCursor = dbHandler.getAllPlates(reverse);
                                             itemsAdapter.changeCursor(dbCursor);
 
-                                            Snackbar.make(view, R.string.snackbar_edit, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(R.id.listView), R.string.snackbar_edit, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         }
                                     }
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                                         dbCursor = dbHandler.getAllPlates(reverse);
                                         itemsAdapter.changeCursor(dbCursor);
 
-                                        Snackbar.make(view, R.string.snackbar_delete, Snackbar.LENGTH_LONG)
+                                        Snackbar.make(findViewById(R.id.listView), R.string.snackbar_delete, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
                                     }
                                 })
@@ -156,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
 
                 // show it
                 alertDialog.show();
-
                 return true;
             }
         });
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onClick(View view) {
 
                 final Plate plate = new Plate();
 
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                                         // Allow empty letterPart since only the numbers matter
                                         if (inputNP.equals("")) {
                                             success = false;
-                                            Snackbar.make(view, R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(R.id.listView), R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         } else {
                                             try {
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                                                 plate.setLetterPart(inputLP);
                                             } catch (NumberFormatException e) {
                                                 success = false;
-                                                Snackbar.make(view, R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
+                                                Snackbar.make(findViewById(R.id.listView), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
                                             }
                                         }
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbCursor = dbHandler.getAllPlates(reverse);
                                             itemsAdapter.changeCursor(dbCursor);
 
-                                            Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(R.id.listView), R.string.snackbar_add, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         }
                                     }
@@ -352,7 +352,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteDB() {
-        // Alert Dialog stuff
         LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.dialog_deletedb, null);
 
@@ -365,7 +364,6 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
 
-        // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView);
 
         alertDialogBuilder
@@ -375,7 +373,8 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 dbHandler.deleteAll();
                                 //TODO Update screen too
-                                //itemsAdapter.changeCursor(dbCursor);
+                                dbCursor = dbHandler.getAllPlates(reverse);
+                                itemsAdapter.changeCursor(dbCursor);
 
                                 //Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
                                 //        .setAction("Action", null).show();
@@ -411,9 +410,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            /*case R.id.action_deletedb:
+            case R.id.action_deletedb:
                 deleteDB();
-                return true;*/
+                return true;
             case R.id.action_settings:
                 showSettings();
                 return true;
