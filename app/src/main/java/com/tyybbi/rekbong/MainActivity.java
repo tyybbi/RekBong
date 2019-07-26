@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -34,10 +36,8 @@ import java.text.SimpleDateFormat;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
-    public static final String VERSION_NAME = "0.1.2";
     public static final String APP_PREFS = "RBPrefs";
     public static final String SORT_PREF = "reverse";
-    public static final int VERSION_CODE = 150000100;
     private static final String DASH = "-";
     private static final String SPACE = " ";
     SharedPreferences prefs;
@@ -277,6 +277,17 @@ public class MainActivity extends AppCompatActivity {
         return (spottedPlates / total) * 100;
     }
 
+    private String getVersionName() {
+        String versionName = "";
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
     public void showSettings() {
         LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.dialog_settings, null);
@@ -336,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
                 .findViewById(R.id.aboutDlgGitTv);
 
         progressTv.setText(spotPercent + SPACE + getString(R.string.about_dlg_progress2));
-        versionTv.setText(VERSION_NAME);
+        versionTv.setText(getVersionName());
         gitTv.setText(R.string.about_dlg_git);
 
         alertDialogBuilder
