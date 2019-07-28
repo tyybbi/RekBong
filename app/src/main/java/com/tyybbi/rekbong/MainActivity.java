@@ -15,7 +15,6 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -37,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
     public static final String APP_PREFS = "RBPrefs";
-    public static final String SORT_PREF = "reverse";
+    public static final String PREF_SORT = "reverse";
+    public static final String PREF_HIDE_LP = "hideLetterPart";
+    public static final String PREF_HIDE_D = "hideDateTime";
     private static final String DASH = "-";
     private static final String SPACE = " ";
     SharedPreferences prefs;
-    boolean reverse;
     DBHandler dbHandler;
     Cursor dbCursor;
     final Context context = this;
@@ -54,11 +54,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         prefs = getSharedPreferences(APP_PREFS, MODE_PRIVATE);
-        reverse = prefs.getBoolean(SORT_PREF, false);
 
         // TODO listView refreshing after setting change
         dbHandler = new DBHandler(this);
-        dbCursor = dbHandler.getAllPlates(reverse);
+        dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
 
         final CustomCursorAdapter itemsAdapter =
                 new CustomCursorAdapter(this, dbCursor);
@@ -72,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
                 final Plate plate;
 
-                //FIXME Crashes occasionally
                 // Alert Dialog stuff
                 LayoutInflater li = LayoutInflater.from(context);
                 View promptsView = li.inflate(R.layout.dialog_edit_plate, null);
@@ -126,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.updatePlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.getAllPlates(reverse);
+                                            dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
                                             itemsAdapter.changeCursor(dbCursor);
 
                                             Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_edit, Snackbar.LENGTH_LONG)
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dbHandler.deletePlate(plate);
-                                        dbCursor = dbHandler.getAllPlates(reverse);
+                                        dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
                                         itemsAdapter.changeCursor(dbCursor);
 
                                         Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_delete, Snackbar.LENGTH_LONG)
@@ -220,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.addNewPlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.getAllPlates(reverse);
+                                            dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
                                             itemsAdapter.changeCursor(dbCursor);
 
                                             Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_add, Snackbar.LENGTH_LONG)
@@ -265,10 +263,19 @@ public class MainActivity extends AppCompatActivity {
             // Populate fields with extracted properties
             DateFormat simpleFormat = new SimpleDateFormat("d.M.yyyy HH:mm");
             Date readableDate = new Date(dateMS);
-            String plate = letterPart + DASH + String.valueOf(numberPart);
-
+            if (prefs.getBoolean(PREF_HIDE_D, false)) {
+                dateText.setVisibility(View.INVISIBLE);
+            } else {
+                dateText.setVisibility(View.VISIBLE);
+            }
             dateText.setText(simpleFormat.format(readableDate));
-            plateText.setText(plate);
+            if (prefs.getBoolean(PREF_HIDE_LP, false)) {
+                String plate = String.valueOf(numberPart);
+                plateText.setText(plate);
+            } else {
+                String plate = letterPart + DASH + String.valueOf(numberPart);
+                plateText.setText(plate);
+            }
         }
     }
 
@@ -298,16 +305,41 @@ public class MainActivity extends AppCompatActivity {
         alertDialogBuilder.setView(promptsView);
 
         final Switch sortCb = promptsView.findViewById(R.id.settingsDlgSortSb);
-        sortCb.setChecked(prefs.getBoolean(SORT_PREF, false));
+        final Switch hideLP = promptsView.findViewById(R.id.settingsDlgHideLSb);
+        final Switch hideD = promptsView.findViewById(R.id.settingsDlgHideDSb);
+
+        sortCb.setChecked(prefs.getBoolean(PREF_SORT, false));
         sortCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    prefs.edit().putBoolean(SORT_PREF, isChecked).apply();
-                    reverse = true;
+                    prefs.edit().putBoolean(PREF_SORT, isChecked).apply();
                 } else {
-                    prefs.edit().putBoolean(SORT_PREF, isChecked).apply();
-                    reverse = false;
+                    prefs.edit().putBoolean(PREF_SORT, isChecked).apply();
+                }
+            }
+        });
+
+        hideLP.setChecked(prefs.getBoolean(PREF_HIDE_LP, false));
+        hideLP.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    prefs.edit().putBoolean(PREF_HIDE_LP, isChecked).apply();
+                } else {
+                    prefs.edit().putBoolean(PREF_HIDE_LP, isChecked).apply();
+                }
+            }
+        });
+
+        hideD.setChecked(prefs.getBoolean(PREF_HIDE_D, false));
+        hideD.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    prefs.edit().putBoolean(PREF_HIDE_D, isChecked).apply();
+                } else {
+                    prefs.edit().putBoolean(PREF_HIDE_D, isChecked).apply();
                 }
             }
         });
@@ -384,7 +416,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 dbHandler.deleteAll();
                                 //TODO Update screen too
-                                dbCursor = dbHandler.getAllPlates(reverse);
+                                dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
                                 itemsAdapter.changeCursor(dbCursor);
 
                                 //Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)

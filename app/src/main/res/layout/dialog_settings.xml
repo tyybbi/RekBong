@@ -13,20 +13,28 @@
         android:text="@string/action_settings"
         android:textSize="24sp" />
 
-    <LinearLayout
-        android:id="@+id/settingsDlgHorLLayout"
+    <Switch
+        android:id="@+id/settingsDlgSortSb"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/settings_dlg_sb_sort" />
 
-        <Switch
-            android:id="@+id/settingsDlgSortSb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="@string/settings_dlg_sb_sort" />
+    <Switch
+        android:id="@+id/settingsDlgHideLSb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/settings_dlg_sb_hide" />
 
-    </LinearLayout>
+    <Switch
+        android:id="@+id/settingsDlgHideDSb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/settings_dlg_sb_hided" />
 
 </LinearLayout>

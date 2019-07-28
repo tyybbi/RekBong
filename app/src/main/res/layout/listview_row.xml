@@ -3,7 +3,7 @@
     android:id="@+id/listViewRow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
+    android:clickable="false"
     android:longClickable="true"
     android:orientation="horizontal">
 
@@ -31,6 +31,7 @@
             android:id="@+id/listViewDateText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="visible"
             android:gravity="right"
             android:text="TextView"
             android:textSize="12sp" />

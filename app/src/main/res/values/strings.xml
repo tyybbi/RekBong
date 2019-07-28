@@ -26,4 +26,6 @@
     <string name="about_dlg_git" translatable="false">https://github.com/tyybbi/RekBong</string>
     <string name="about_dlg_www" translatable="false">WWW</string>
     <string name="settings_dlg_sb_sort">Reverse spotting order</string>
+    <string name="settings_dlg_sb_hide">Hide letter part</string>
+    <string name="settings_dlg_sb_hided">Hide date and time</string>
 </resources>
