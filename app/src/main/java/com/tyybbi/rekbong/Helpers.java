@@ -8,7 +8,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Helpers {
+public final class Helpers {
+    private Helpers() {}
+
     static double calculatePercent(double spottedPlates) {
         final double total = 999;
         return (spottedPlates / total) * 100;
