@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -28,9 +26,12 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import java.text.ParseException;
 import java.util.Date;
-import java.text.SimpleDateFormat;
+
+import static com.tyybbi.rekbong.Helpers.calculatePercent;
+import static com.tyybbi.rekbong.Helpers.convertDateToLong;
+import static com.tyybbi.rekbong.Helpers.convertDateToStr;
+import static com.tyybbi.rekbong.Helpers.getVersionName;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -289,41 +290,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private double calculatePercent(double spottedPlates) {
-        final double total = 999;
-        return (spottedPlates / total) * 100;
-    }
-
-    private String getVersionName() {
-        String versionName = "";
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            versionName = packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return versionName;
-    }
-
-    private String convertDateToStr(long datetimeMS) {
-        SimpleDateFormat simpleFormatDT = new SimpleDateFormat("d.M.yyyy HH:mm");
-        Date readableDate = new Date(datetimeMS);
-
-        return simpleFormatDT.format(readableDate);
-    }
-
-    private long convertDateToLong(String dateStr) {
-        long millis = 0;
-        SimpleDateFormat simpleFormatDT = new SimpleDateFormat("d.M.yyyy HH:mm");
-        try {
-            Date dateL = simpleFormatDT.parse(dateStr);
-            millis = dateL.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return millis;
-    }
-
     public void showSettings() {
         LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.dialog_settings, null);
@@ -409,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
                 .findViewById(R.id.aboutDlgGitTv);
 
         progressTv.setText(spotPercent + SPACE + getString(R.string.about_dlg_progress2));
-        versionTv.setText(getVersionName());
+        versionTv.setText(getVersionName(context));
         gitTv.setText(R.string.about_dlg_git);
 
         alertDialogBuilder
