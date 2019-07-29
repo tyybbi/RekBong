@@ -62,6 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:textSize="14sp"
             android:gravity="center"
             android:inputType="date|textPersonName"
             android:text="Name" />
