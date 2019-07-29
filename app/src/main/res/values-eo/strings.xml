@@ -20,4 +20,6 @@
     <string name="snackbar_empty_field">Malplena enigokampo. Ĉesita</string>
     <string name="snackbar_not_int">Platnumero ne estas ĉifero. Ĉesita</string>
     <string name="settings_dlg_sb_sort">Inversa ordigordo</string>
+    <string name="settings_dlg_sb_hide">Kaŝu literparton</string>
+    <string name="settings_dlg_sb_hided">Kaŝu daton kaj tempon</string>
 </resources>

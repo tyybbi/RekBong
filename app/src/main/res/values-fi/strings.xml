@@ -20,4 +20,6 @@
     <string name="snackbar_empty_field">Tyhjä syöttökenttä. Keskeytetään</string>
     <string name="snackbar_not_int">Kilven numero-osa virheellinen. Keskeytetään</string>
     <string name="settings_dlg_sb_sort">Käänteinen järjestys</string>
+    <string name="settings_dlg_sb_hide">Piilota kirjainosa</string>
+    <string name="settings_dlg_sb_hided">Piilota päivämäärä ja aika</string>
 </resources>
