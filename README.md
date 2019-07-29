@@ -6,7 +6,8 @@ An Android app to help keep track of spotted vehicle number plates (1-999).
 
 - Press FAB (+) to add new plate
     - Insert plate letters (optional) and number
-- Long-pressing a plate in main listview allows user to edit or delete plate
+- Long-pressing a plate in main listview allows user to edit plate
+  information (letters, number and date/time) or delete it completely
 - Settings
     - Sort spotted plates in descending (default) or ascending order
     - Hide letter part from main view, so that only number part of the plate
@@ -17,8 +18,7 @@ An Android app to help keep track of spotted vehicle number plates (1-999).
 
 ## TODO
 
-- Add date editing option as well (the user could insert the actual spotting
-  dates)
+- ListView refreshing still not immediate
 - Maybe add more spotting info
 
 ## Disclaimer
