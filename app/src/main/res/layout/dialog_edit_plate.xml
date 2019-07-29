@@ -50,4 +50,21 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/editPlateHorLLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editPlateDateEt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="date|textPersonName"
+            android:text="Name" />
+    </LinearLayout>
+
 </LinearLayout>

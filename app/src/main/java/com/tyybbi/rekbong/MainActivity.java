@@ -28,7 +28,7 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
@@ -85,10 +85,13 @@ public class MainActivity extends AppCompatActivity {
                         .findViewById(R.id.editPlateLetterPartEt);
                 final EditText plateEditNPEt = promptsView
                         .findViewById(R.id.editPlateNumberPartEt);
+                final EditText plateEditDEt = promptsView
+                        .findViewById(R.id.editPlateDateEt);
 
                 plate = dbHandler.getPlate(id);
                 plateEditLPEt.setText(plate.getLetterPart());
                 plateEditNPEt.setText(String.valueOf(plate.getNumberPart()));
+                plateEditDEt.setText(convertDateToStr(plate.getDatetime()));
 
                 // set dialog message
                 alertDialogBuilder
@@ -96,11 +99,11 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.dlg_btn_ok,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        //TODO Don't update if no plate fields are changed
                                         boolean success = true;
 
                                         String inputLP = plateEditLPEt.getText().toString();
                                         String inputNP = plateEditNPEt.getText().toString();
+                                        String inputD = plateEditDEt.getText().toString();
 
                                         if (inputNP.equals("")) {
                                             success = false;
@@ -112,15 +115,22 @@ public class MainActivity extends AppCompatActivity {
                                                 plate.setNumberPart(NP_as_int);
                                                 plate.setLetterPart(inputLP);
                                             } catch (NumberFormatException e) {
+                                                e.printStackTrace();
                                                 success = false;
                                                 Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
                                             }
                                         }
 
+                                        if (plate.getDatetime() != convertDateToLong(inputD) &&
+                                                (convertDateToLong(inputD) != 0)) {
+                                            plate.setDatetime(convertDateToLong(inputD));
+                                        } else {
+                                            plate.setDatetime(plate.getDatetime());
+                                        }
+
                                         if (success) {
                                             plate.setId(plate.getId());
-                                            plate.setDatetime(plate.getDatetime());
                                             dbHandler.updatePlate(plate);
 
                                             // Refresh listView
@@ -206,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
                                                 plate.setNumberPart(NP_as_int);
                                                 plate.setLetterPart(inputLP);
                                             } catch (NumberFormatException e) {
+                                                e.printStackTrace();
                                                 success = false;
                                                 Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
@@ -260,15 +271,14 @@ public class MainActivity extends AppCompatActivity {
             long dateMS = cursor.getLong(cursor.getColumnIndexOrThrow("datetime"));
             String letterPart = cursor.getString(cursor.getColumnIndexOrThrow("letterpart"));
             int numberPart = cursor.getInt(cursor.getColumnIndexOrThrow("numberpart"));
+
             // Populate fields with extracted properties
-            DateFormat simpleFormat = new SimpleDateFormat("d.M.yyyy HH:mm");
-            Date readableDate = new Date(dateMS);
             if (prefs.getBoolean(PREF_HIDE_D, false)) {
                 dateText.setVisibility(View.INVISIBLE);
             } else {
                 dateText.setVisibility(View.VISIBLE);
             }
-            dateText.setText(simpleFormat.format(readableDate));
+            dateText.setText(convertDateToStr(dateMS));
             if (prefs.getBoolean(PREF_HIDE_LP, false)) {
                 String plate = String.valueOf(numberPart);
                 plateText.setText(plate);
@@ -293,6 +303,25 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return versionName;
+    }
+
+    private String convertDateToStr(long datetimeMS) {
+        SimpleDateFormat simpleFormatDT = new SimpleDateFormat("d.M.yyyy HH:mm");
+        Date readableDate = new Date(datetimeMS);
+
+        return simpleFormatDT.format(readableDate);
+    }
+
+    private long convertDateToLong(String dateStr) {
+        long millis = 0;
+        SimpleDateFormat simpleFormatDT = new SimpleDateFormat("d.M.yyyy HH:mm");
+        try {
+            Date dateL = simpleFormatDT.parse(dateStr);
+            millis = dateL.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return millis;
     }
 
     public void showSettings() {
@@ -358,7 +387,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void showAbout() {
         ListView listView = findViewById(R.id.listView);
-        String spotPercent = String.format("%.1f", calculatePercent(listView.getAdapter().getCount()));
+        String spotPercent =
+                String.format("%.1f", calculatePercent(listView.getAdapter().getCount()));
 
         // Alert Dialog stuff
         LayoutInflater li = LayoutInflater.from(context);
