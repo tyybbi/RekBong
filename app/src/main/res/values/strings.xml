@@ -18,6 +18,7 @@
     <string name="snackbar_add">New plate added</string>
     <string name="snackbar_edit">Updated plate successfully</string>
     <string name="snackbar_delete">Deleted plate successfully</string>
+    <string name="snackbar_delete_all">Deleted all plates successfully</string>
     <string name="snackbar_empty_field">Empty input field. Aborting</string>
     <string name="snackbar_not_int">Plate number not an integer. Aborting</string>
     <string name="about_dlg_progress1">Progress</string>

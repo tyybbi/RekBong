@@ -22,4 +22,5 @@
     <string name="settings_dlg_sb_sort">Käänteinen järjestys</string>
     <string name="settings_dlg_sb_hide">Piilota kirjainosa</string>
     <string name="settings_dlg_sb_hided">Piilota päivämäärä ja aika</string>
+    <string name="snackbar_delete_all">Kaikkien kilpien poisto onnistui</string>
 </resources>

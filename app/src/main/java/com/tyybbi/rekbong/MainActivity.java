@@ -27,6 +27,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.Date;
+import java.util.Locale;
 
 import static com.tyybbi.rekbong.Helpers.calculatePercent;
 import static com.tyybbi.rekbong.Helpers.convertDateToLong;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String SPACE = " ";
     SharedPreferences prefs;
     DBHandler dbHandler;
+    CustomCursorAdapter itemsAdapter;
     Cursor dbCursor;
     final Context context = this;
 
@@ -60,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
         dbHandler = new DBHandler(this);
         dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
 
-        final CustomCursorAdapter itemsAdapter =
-                new CustomCursorAdapter(this, dbCursor);
+        itemsAdapter = new CustomCursorAdapter(this, dbCursor);
 
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(itemsAdapter);
@@ -72,14 +73,12 @@ public class MainActivity extends AppCompatActivity {
 
                 final Plate plate;
 
-                // Alert Dialog stuff
                 LayoutInflater li = LayoutInflater.from(context);
                 View promptsView = li.inflate(R.layout.dialog_edit_plate, null);
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                         context);
 
-                // set prompts.xml to alertdialog builder
                 alertDialogBuilder.setView(promptsView);
 
                 final EditText plateEditLPEt = promptsView
@@ -94,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 plateEditNPEt.setText(String.valueOf(plate.getNumberPart()));
                 plateEditDEt.setText(convertDateToStr(plate.getDatetime()));
 
-                // set dialog message
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton(R.string.dlg_btn_ok,
@@ -161,10 +159,8 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 });
 
-                // create alert dialog
                 AlertDialog alertDialog = alertDialogBuilder.create();
 
-                // show it
                 alertDialog.show();
                 return true;
             }
@@ -177,14 +173,12 @@ public class MainActivity extends AppCompatActivity {
 
                 final Plate plate = new Plate();
 
-                // Alert Dialog stuff
                 LayoutInflater li = LayoutInflater.from(context);
 				View promptsView = li.inflate(R.layout.dialog_addplate, null);
 
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 						context);
 
-				// set prompts.xml to alertdialog builder
 				alertDialogBuilder.setView(promptsView);
 
 				final EditText plateLetterPartInputEt = promptsView
@@ -193,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
 				final EditText plateNumberPartInputEt = promptsView
                        .findViewById(R.id.addPlateNumberPartEt);
 
-				// set dialog message
 				alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton(R.string.dlg_btn_save,
@@ -245,10 +238,8 @@ public class MainActivity extends AppCompatActivity {
 					    }
 					  });
 
-				// create alert dialog
 				AlertDialog alertDialog = alertDialogBuilder.create();
 
-				// show it
 				alertDialog.show();
             }
         });
@@ -344,6 +335,9 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.dlg_btn_ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
+                                itemsAdapter.changeCursor(dbCursor);
+                                itemsAdapter.notifyDataSetChanged();
                             }
                         });
 
@@ -354,9 +348,10 @@ public class MainActivity extends AppCompatActivity {
     public void showAbout() {
         ListView listView = findViewById(R.id.listView);
         String spotPercent =
-                String.format("%.1f", calculatePercent(listView.getAdapter().getCount()));
+                String.format(Locale.getDefault(), "%.1f",
+                        calculatePercent(listView.getAdapter().getCount()));
+        String progressText = spotPercent + SPACE + getString(R.string.about_dlg_progress2);
 
-        // Alert Dialog stuff
         LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.dialog_about, null);
 
@@ -374,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView gitTv = promptsView
                 .findViewById(R.id.aboutDlgGitTv);
 
-        progressTv.setText(spotPercent + SPACE + getString(R.string.about_dlg_progress2));
+        progressTv.setText(progressText);
         versionTv.setText(getVersionName(context));
         gitTv.setText(R.string.about_dlg_git);
 
@@ -397,12 +392,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
 
-        final CustomCursorAdapter itemsAdapter =
-                new CustomCursorAdapter(this, dbCursor);
-
-        ListView listView = findViewById(R.id.listView);
-        listView.setAdapter(itemsAdapter);
-
         alertDialogBuilder.setView(promptsView);
 
         alertDialogBuilder
@@ -414,9 +403,10 @@ public class MainActivity extends AppCompatActivity {
                                 //TODO Update screen too
                                 dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
                                 itemsAdapter.changeCursor(dbCursor);
+                                itemsAdapter.notifyDataSetChanged();
 
-                                //Snackbar.make(view, R.string.snackbar_add, Snackbar.LENGTH_LONG)
-                                //        .setAction("Action", null).show();
+                                Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_delete_all, Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
                             }
                         })
                 .setNegativeButton(R.string.dlg_btn_no,

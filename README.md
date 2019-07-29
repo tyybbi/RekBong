@@ -18,7 +18,6 @@ An Android app to help keep track of spotted vehicle number plates (1-999).
 
 ## TODO
 
-- ListView refreshing still not immediate
 - Maybe add more spotting info
 
 ## Disclaimer
