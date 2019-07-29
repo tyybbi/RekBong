@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences(APP_PREFS, MODE_PRIVATE);
 
-        // TODO listView refreshing after setting change
         dbHandler = new DBHandler(this);
         dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
 
@@ -400,7 +399,6 @@ public class MainActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dbHandler.deleteAll();
-                                //TODO Update screen too
                                 dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
                                 itemsAdapter.changeCursor(dbCursor);
                                 itemsAdapter.notifyDataSetChanged();
