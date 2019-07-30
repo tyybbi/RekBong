@@ -44,8 +44,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="left"
-            android:inputType="numberSigned"
+            android:inputType="number|none"
             android:maxLength="3"
+            android:digits="0123456789"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -62,10 +63,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:textSize="14sp"
             android:gravity="center"
-            android:inputType="date|textPersonName"
-            android:text="Name" />
+            android:inputType="number|none"
+            android:digits="0123456789.: "
+            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>

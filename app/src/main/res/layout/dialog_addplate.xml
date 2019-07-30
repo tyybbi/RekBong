@@ -46,8 +46,9 @@
             android:ems="10"
             android:gravity="left"
             android:hint="@string/add_dlg_et_example_np"
-            android:inputType="numberSigned"
+            android:inputType="number|none"
             android:maxLength="3"
+            android:digits="0123456789"
             android:textStyle="bold" />
 
     </LinearLayout>

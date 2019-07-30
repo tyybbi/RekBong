@@ -18,9 +18,10 @@
     <string name="snackbar_delete">Plato forigita sukcese</string>
     <string name="snackbar_edit">Plato redaktita sukcese</string>
     <string name="snackbar_empty_field">Malplena enigokampo. Ĉesita</string>
-    <string name="snackbar_not_int">Platnumero ne estas ĉifero. Ĉesita</string>
-    <string name="settings_dlg_sb_sort">Inversa ordigordo</string>
+    <string name="snackbar_invalid_number">Malvalida platnumero. Ĉesita</string>
     <string name="settings_dlg_sb_hide">Kaŝu literparton</string>
     <string name="settings_dlg_sb_hided">Kaŝu daton kaj tempon</string>
     <string name="snackbar_delete_all">Ĉiuj platoj forigitaj sukcese</string>
+    <string name="settings_dlg_sb_reverse">Inversa ekvida ordigordo</string>
+    <string name="snackbar_zero">Ne nulo permesita. Ĉesita</string>
 </resources>

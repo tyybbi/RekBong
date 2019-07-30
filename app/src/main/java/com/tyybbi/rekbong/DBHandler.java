@@ -70,13 +70,42 @@ public class DBHandler extends SQLiteOpenHelper {
         return c;
     }
 
+    public int getNextPlateNum(boolean reverse) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql;
+        int nextPlate = -2;
+
+        if (!reverse) {
+            sql = "SELECT max(" + KEY_NUMBER_PART + ") FROM " + TABLE_plates;
+        } else {
+            sql = "SELECT min(" + KEY_NUMBER_PART + ") FROM " + TABLE_plates;
+        }
+
+        try {
+            Cursor c = db.rawQuery(sql, null);
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                nextPlate = c.getInt(0);
+                c.moveToNext();
+            }
+            c.close();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        if (!reverse) {
+            return nextPlate + 1;
+        } else {
+            return nextPlate - 1;
+        }
+    }
+
     public Plate getPlate(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String sql = "SELECT * FROM " + TABLE_plates + " WHERE " + KEY_ID + " = " + id;
         Cursor c = db.rawQuery(sql, null);
-        if (c != null)
-            c.moveToFirst();
+        c.moveToFirst();
 
         Plate plate = new Plate();
         plate.setId(c.getInt(0));
@@ -95,7 +124,6 @@ public class DBHandler extends SQLiteOpenHelper {
         cv.put(KEY_LETTER_PART, plate.getLetterPart());
         cv.put(KEY_NUMBER_PART, plate.getNumberPart());
         cv.put(KEY_DATE, plate.getDatetime());
-
         db.update(TABLE_plates, cv,  KEY_ID + " = ?", strId);
     }
 

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "RekDebug";
     public static final String APP_PREFS = "RBPrefs";
-    public static final String PREF_SORT = "reverse";
+    public static final String PREF_REVERSE = "reverse";
     public static final String PREF_HIDE_LP = "hideLetterPart";
     public static final String PREF_HIDE_D = "hideDateTime";
     private static final String DASH = "-";
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         prefs = getSharedPreferences(APP_PREFS, MODE_PRIVATE);
 
         dbHandler = new DBHandler(this);
-        dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
+        dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
 
         itemsAdapter = new CustomCursorAdapter(this, dbCursor);
 
@@ -110,12 +110,19 @@ public class MainActivity extends AppCompatActivity {
                                         } else {
                                             try {
                                                 int NP_as_int = Integer.parseInt(inputNP);
-                                                plate.setNumberPart(NP_as_int);
-                                                plate.setLetterPart(inputLP);
+                                                if (NP_as_int != 0) {
+                                                    plate.setNumberPart(NP_as_int);
+                                                    plate.setLetterPart(inputLP);
+                                                } else {
+                                                    success = false;
+                                                    Snackbar.make(findViewById(android.R.id.content),
+                                                            R.string.snackbar_zero, Snackbar.LENGTH_LONG)
+                                                            .setAction("Action", null).show();
+                                                }
                                             } catch (NumberFormatException e) {
                                                 e.printStackTrace();
                                                 success = false;
-                                                Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
+                                                Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_invalid_number, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
                                             }
                                         }
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.updatePlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
+                                            dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
                                             itemsAdapter.changeCursor(dbCursor);
 
                                             Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_edit, Snackbar.LENGTH_LONG)
@@ -144,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dbHandler.deletePlate(plate);
-                                        dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
+                                        dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
                                         itemsAdapter.changeCursor(dbCursor);
 
                                         Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_delete, Snackbar.LENGTH_LONG)
@@ -171,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 final Plate plate = new Plate();
+                int nextPlateNum;
 
                 LayoutInflater li = LayoutInflater.from(context);
 				View promptsView = li.inflate(R.layout.dialog_addplate, null);
@@ -183,8 +191,17 @@ public class MainActivity extends AppCompatActivity {
 				final EditText plateLetterPartInputEt = promptsView
 						.findViewById(R.id.addPlateLetterPartEt);
 
-				final EditText plateNumberPartInputEt = promptsView
+                final EditText plateNumberPartInputEt = promptsView
                        .findViewById(R.id.addPlateNumberPartEt);
+
+                // Guess next plate number to be spotted
+				nextPlateNum = dbHandler.getNextPlateNum(prefs.getBoolean(PREF_REVERSE, false));
+                if ((nextPlateNum > 0) && (nextPlateNum < 1000)) {
+				    plateNumberPartInputEt.setText(String.valueOf(nextPlateNum));
+                } else if ((nextPlateNum < 0) && (prefs.getBoolean(PREF_REVERSE, false))) {
+                    nextPlateNum = 999;
+                    plateNumberPartInputEt.setText(String.valueOf(nextPlateNum));
+                }
 
 				alertDialogBuilder
                         .setCancelable(false)
@@ -206,12 +223,19 @@ public class MainActivity extends AppCompatActivity {
                                         } else {
                                             try {
                                                 int NP_as_int = Integer.parseInt(inputNP);
-                                                plate.setNumberPart(NP_as_int);
-                                                plate.setLetterPart(inputLP);
+                                                if (NP_as_int != 0) {
+                                                    plate.setNumberPart(NP_as_int);
+                                                    plate.setLetterPart(inputLP);
+                                                } else {
+                                                    success = false;
+                                                    Snackbar.make(findViewById(android.R.id.content),
+                                                            R.string.snackbar_zero, Snackbar.LENGTH_LONG)
+                                                            .setAction("Action", null).show();
+                                                }
                                             } catch (NumberFormatException e) {
                                                 e.printStackTrace();
                                                 success = false;
-                                                Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_not_int, Snackbar.LENGTH_LONG)
+                                                Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_invalid_number, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
                                             }
                                         }
@@ -222,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.addNewPlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
+                                            dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
                                             itemsAdapter.changeCursor(dbCursor);
 
                                             Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_add, Snackbar.LENGTH_LONG)
@@ -289,24 +313,24 @@ public class MainActivity extends AppCompatActivity {
 
         alertDialogBuilder.setView(promptsView);
 
-        final Switch sortCb = promptsView.findViewById(R.id.settingsDlgSortSb);
-        final Switch hideLP = promptsView.findViewById(R.id.settingsDlgHideLSb);
-        final Switch hideD = promptsView.findViewById(R.id.settingsDlgHideDSb);
+        final Switch reverseSb = promptsView.findViewById(R.id.settingsDlgReverseSb);
+        final Switch hideLPSb = promptsView.findViewById(R.id.settingsDlgHideLSb);
+        final Switch hideDSb = promptsView.findViewById(R.id.settingsDlgHideDSb);
 
-        sortCb.setChecked(prefs.getBoolean(PREF_SORT, false));
-        sortCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        reverseSb.setChecked(prefs.getBoolean(PREF_REVERSE, false));
+        reverseSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    prefs.edit().putBoolean(PREF_SORT, isChecked).apply();
+                    prefs.edit().putBoolean(PREF_REVERSE, isChecked).apply();
                 } else {
-                    prefs.edit().putBoolean(PREF_SORT, isChecked).apply();
+                    prefs.edit().putBoolean(PREF_REVERSE, isChecked).apply();
                 }
             }
         });
 
-        hideLP.setChecked(prefs.getBoolean(PREF_HIDE_LP, false));
-        hideLP.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        hideLPSb.setChecked(prefs.getBoolean(PREF_HIDE_LP, false));
+        hideLPSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -317,8 +341,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        hideD.setChecked(prefs.getBoolean(PREF_HIDE_D, false));
-        hideD.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        hideDSb.setChecked(prefs.getBoolean(PREF_HIDE_D, false));
+        hideDSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -334,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.dlg_btn_ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
+                                dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
                                 itemsAdapter.changeCursor(dbCursor);
                                 itemsAdapter.notifyDataSetChanged();
                             }
@@ -399,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dbHandler.deleteAll();
-                                dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_SORT, false));
+                                dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
                                 itemsAdapter.changeCursor(dbCursor);
                                 itemsAdapter.notifyDataSetChanged();
 
@@ -414,10 +438,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-        // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
 
-        // show it
         alertDialog.show();
     }
 

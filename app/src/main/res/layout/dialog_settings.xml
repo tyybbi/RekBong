@@ -14,12 +14,12 @@
         android:textSize="24sp" />
 
     <Switch
-        android:id="@+id/settingsDlgSortSb"
+        android:id="@+id/settingsDlgReverseSb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="@string/settings_dlg_sb_sort" />
+        android:text="@string/settings_dlg_sb_reverse" />
 
     <Switch
         android:id="@+id/settingsDlgHideLSb"
