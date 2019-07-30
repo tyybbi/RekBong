@@ -12,7 +12,7 @@ An Android app to help keep track of spotted vehicle number plates (1-999).
 - Long-pressing a plate in main listview allows user to edit plate
   information (letters, number and date/time) or delete it completely
 - Settings
-    - Sort spotted plates in descending (default) or ascending order
+    - Reverse spotting order, i.e. from 999 down to 1
     - Hide letter part from main view, so that only number part of the plate
       is shown
     - Hide date and time from the plates
