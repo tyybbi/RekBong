@@ -22,7 +22,7 @@ An Android app to help keep track of spotted vehicle number plates (1-999).
 ## TODO
 
 - Add more spotting info
-- Maybe add support for multiple plate format
+- Maybe add support for multiple plate formats
 
 ## Disclaimer
 
