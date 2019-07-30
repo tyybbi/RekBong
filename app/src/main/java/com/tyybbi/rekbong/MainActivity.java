@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
                 String plate = String.valueOf(numberPart);
                 plateText.setText(plate);
             } else {
-                String plate = letterPart + DASH + String.valueOf(numberPart);
+                String plate = letterPart + DASH + numberPart;
                 plateText.setText(plate);
             }
         }

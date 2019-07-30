@@ -65,9 +65,8 @@ public class DBHandler extends SQLiteOpenHelper {
             // Reverse spotting order, ie. from 999 to 1
             sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_NUMBER_PART;
         }
-        Cursor c = db.rawQuery(sql, null);
 
-        return c;
+        return db.rawQuery(sql, null);
     }
 
     public int getNextPlateNum(boolean reverse) {

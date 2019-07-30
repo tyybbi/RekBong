@@ -7,8 +7,8 @@ android {
         applicationId "com.tyybbi.rekbong"
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 150000201
-        versionName "0.2.1"
+        versionCode 150000202
+        versionName "0.2.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
