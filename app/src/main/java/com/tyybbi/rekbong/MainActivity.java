@@ -36,7 +36,7 @@ import static com.tyybbi.rekbong.Helpers.getVersionName;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "RekDebug";
+    //public static final String TAG = "RekDebug";
     public static final String APP_PREFS = "RBPrefs";
     public static final String PREF_REVERSE = "reverse";
     public static final String PREF_HIDE_LP = "hideLetterPart";
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 int nextPlateNum;
 
                 LayoutInflater li = LayoutInflater.from(context);
-				View promptsView = li.inflate(R.layout.dialog_addplate, null);
+				View promptsView = li.inflate(R.layout.dialog_add_plate, null);
 
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 						context);
@@ -410,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void deleteDB() {
         LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.dialog_deletedb, null);
+        View promptsView = li.inflate(R.layout.dialog_delete_db, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
@@ -459,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.action_deletedb:
+            case R.id.action_delete_db:
                 deleteDB();
                 return true;
             case R.id.action_settings:

@@ -7,7 +7,7 @@
     <string name="action_deletedb">Forigu datumbazo</string>
     <string name="action_settings">Agordoj</string>
     <string name="add_dlg_tv_title">Aldonu novan platon</string>
-    <string name="deletedb_title_tv">Ĉu vere forigu datumbazon?</string>
+    <string name="delete_db_title_tv">Ĉu vere forigu datumbazon?</string>
     <string name="dlg_btn_cancel">Nuligu</string>
     <string name="dlg_btn_delete">Forigu</string>
     <string name="dlg_btn_no">Ne</string>

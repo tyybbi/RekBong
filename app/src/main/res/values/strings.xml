@@ -8,7 +8,7 @@
     <string name="add_dlg_tv_title">Add new plate</string>
     <string name="add_dlg_tv_dash" translatable="false">-</string>
     <string name="edit_dlg_tv_title">Edit plate</string>
-    <string name="deletedb_title_tv">Really delete database?</string>
+    <string name="delete_db_title_tv">Really delete database?</string>
     <string name="dlg_btn_ok" translatable="false">OK</string>
     <string name="dlg_btn_save">Save</string>
     <string name="dlg_btn_yes">Yes</string>
