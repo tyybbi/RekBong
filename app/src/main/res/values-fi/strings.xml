@@ -24,4 +24,6 @@
     <string name="snackbar_delete_all">Kaikkien kilpien poisto onnistui</string>
     <string name="settings_dlg_sb_reverse">Käänteinen bongausjärjestys</string>
     <string name="snackbar_zero">Nollaa ei sallita. Keskeytetään</string>
+    <string name="snackbar_qam_abort">Ei pystytä selvittämään seuraavaa numeroa. Keskeytetään</string>
+    <string name="settings_dlg_sb_qam">Pikalisäystila</string>
 </resources>

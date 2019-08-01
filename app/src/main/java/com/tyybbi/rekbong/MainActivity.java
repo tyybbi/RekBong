@@ -26,12 +26,14 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 import static com.tyybbi.rekbong.Helpers.calculatePercent;
 import static com.tyybbi.rekbong.Helpers.convertDateToLong;
 import static com.tyybbi.rekbong.Helpers.convertDateToStr;
+import static com.tyybbi.rekbong.Helpers.getNextPlateNumber;
 import static com.tyybbi.rekbong.Helpers.getVersionName;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String PREF_REVERSE = "reverse";
     public static final String PREF_HIDE_LP = "hideLetterPart";
     public static final String PREF_HIDE_D = "hideDateTime";
+    public static final String PREF_QAM = "quickAddMode";
     private static final String DASH = "-";
     private static final String SPACE = " ";
     SharedPreferences prefs;
@@ -69,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
-
                 final Plate plate;
 
                 LayoutInflater li = LayoutInflater.from(context);
@@ -105,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
 
                                         if (inputNP.equals("")) {
                                             success = false;
-                                            Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(android.R.id.content),
+                                                    R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         } else {
                                             try {
@@ -122,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
                                             } catch (NumberFormatException e) {
                                                 e.printStackTrace();
                                                 success = false;
-                                                Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_invalid_number, Snackbar.LENGTH_LONG)
+                                                Snackbar.make(findViewById(android.R.id.content),
+                                                        R.string.snackbar_invalid_number, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
                                             }
                                         }
@@ -139,10 +143,12 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.updatePlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
+                                            dbCursor = dbHandler.getAllPlates
+                                                    (prefs.getBoolean(PREF_REVERSE, false));
                                             itemsAdapter.changeCursor(dbCursor);
 
-                                            Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_edit, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(android.R.id.content),
+                                                    R.string.snackbar_edit, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         }
                                     }
@@ -151,10 +157,12 @@ public class MainActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dbHandler.deletePlate(plate);
-                                        dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
+                                        dbCursor = dbHandler.getAllPlates
+                                                (prefs.getBoolean(PREF_REVERSE, false));
                                         itemsAdapter.changeCursor(dbCursor);
 
-                                        Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_delete, Snackbar.LENGTH_LONG)
+                                        Snackbar.make(findViewById(android.R.id.content),
+                                                R.string.snackbar_delete, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
                                     }
                                 })
@@ -176,14 +184,39 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 final Plate plate = new Plate();
-                int nextPlateNum;
+                final Date date = new Date();
+
+                // Guess next plate number to be spotted
+                ArrayList<Integer> plateNumberParts = dbHandler.getAllNumberParts();
+                int nextPlateNumber = getNextPlateNumber(
+                        plateNumberParts, prefs.getBoolean(PREF_REVERSE, false));
+
+                if (prefs.getBoolean(PREF_QAM, false)) {
+                    if ((nextPlateNumber > 0) && (nextPlateNumber < 1000)) {
+                        plate.setLetterPart("");
+                        plate.setNumberPart(nextPlateNumber);
+                    } else {
+                        Snackbar.make(findViewById(android.R.id.content),
+                                R.string.snackbar_qam_abort, Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                        return;
+                    }
+                    plate.setDatetime(date.getTime());
+                    dbHandler.addNewPlate(plate);
+                    dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
+                    itemsAdapter.changeCursor(dbCursor);
+
+                    Snackbar.make(findViewById(android.R.id.content),
+                            R.string.snackbar_add, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    return;
+                }
 
                 LayoutInflater li = LayoutInflater.from(context);
-				View promptsView = li.inflate(R.layout.dialog_add_plate, null);
+                View promptsView = li.inflate(R.layout.dialog_add_plate, null);
 
-				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 						context);
 
 				alertDialogBuilder.setView(promptsView);
@@ -194,22 +227,16 @@ public class MainActivity extends AppCompatActivity {
                 final EditText plateNumberPartInputEt = promptsView
                        .findViewById(R.id.addPlateNumberPartEt);
 
-                // Guess next plate number to be spotted
-				nextPlateNum = dbHandler.getNextPlateNum(prefs.getBoolean(PREF_REVERSE, false));
-                if ((nextPlateNum > 0) && (nextPlateNum < 1000)) {
-				    plateNumberPartInputEt.setText(String.valueOf(nextPlateNum));
-                } else if ((nextPlateNum < 0) && (prefs.getBoolean(PREF_REVERSE, false))) {
-                    nextPlateNum = 999;
-                    plateNumberPartInputEt.setText(String.valueOf(nextPlateNum));
+                if ((nextPlateNumber > 0) && (nextPlateNumber < 1000)) {
+                    plateNumberPartInputEt.setText(String.valueOf(nextPlateNumber));
                 }
 
-				alertDialogBuilder
+                alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton(R.string.dlg_btn_save,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         boolean success = true;
-                                        Date date = new Date();
 
                                         // Get plate parts and store them
                                         String inputLP = plateLetterPartInputEt.getText().toString();
@@ -218,7 +245,8 @@ public class MainActivity extends AppCompatActivity {
                                         // Allow empty letterPart since only the numbers matter
                                         if (inputNP.equals("")) {
                                             success = false;
-                                            Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(android.R.id.content),
+                                                    R.string.snackbar_empty_field, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         } else {
                                             try {
@@ -235,7 +263,8 @@ public class MainActivity extends AppCompatActivity {
                                             } catch (NumberFormatException e) {
                                                 e.printStackTrace();
                                                 success = false;
-                                                Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_invalid_number, Snackbar.LENGTH_LONG)
+                                                Snackbar.make(findViewById(android.R.id.content),
+                                                        R.string.snackbar_invalid_number, Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();
                                             }
                                         }
@@ -246,10 +275,12 @@ public class MainActivity extends AppCompatActivity {
                                             dbHandler.addNewPlate(plate);
 
                                             // Refresh listView
-                                            dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
+                                            dbCursor = dbHandler.getAllPlates(prefs
+                                                    .getBoolean(PREF_REVERSE, false));
                                             itemsAdapter.changeCursor(dbCursor);
 
-                                            Snackbar.make(findViewById(android.R.id.content), R.string.snackbar_add, Snackbar.LENGTH_LONG)
+                                            Snackbar.make(findViewById(android.R.id.content),
+                                                    R.string.snackbar_add, Snackbar.LENGTH_LONG)
                                                     .setAction("Action", null).show();
                                         }
                                     }
@@ -269,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class CustomCursorAdapter extends CursorAdapter {
-        public CustomCursorAdapter(Context context, Cursor cursor) {
+        CustomCursorAdapter(Context context, Cursor cursor) {
             super(context, cursor, 0);
         }
 
@@ -282,6 +313,7 @@ public class MainActivity extends AppCompatActivity {
         public void bindView (View view, Context context, Cursor cursor){
             TextView dateText = view.findViewById(R.id.listViewDateText);
             TextView plateText = view.findViewById(R.id.listViewPlateText);
+
             // Extract properties from cursor
             long dateMS = cursor.getLong(cursor.getColumnIndexOrThrow("datetime"));
             String letterPart = cursor.getString(cursor.getColumnIndexOrThrow("letterpart"));
@@ -316,16 +348,13 @@ public class MainActivity extends AppCompatActivity {
         final Switch reverseSb = promptsView.findViewById(R.id.settingsDlgReverseSb);
         final Switch hideLPSb = promptsView.findViewById(R.id.settingsDlgHideLSb);
         final Switch hideDSb = promptsView.findViewById(R.id.settingsDlgHideDSb);
+        final Switch qamSb = promptsView.findViewById(R.id.settingsDlgQamSb);
 
         reverseSb.setChecked(prefs.getBoolean(PREF_REVERSE, false));
         reverseSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    prefs.edit().putBoolean(PREF_REVERSE, isChecked).apply();
-                } else {
-                    prefs.edit().putBoolean(PREF_REVERSE, isChecked).apply();
-                }
+                prefs.edit().putBoolean(PREF_REVERSE, isChecked).apply();
             }
         });
 
@@ -333,11 +362,7 @@ public class MainActivity extends AppCompatActivity {
         hideLPSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    prefs.edit().putBoolean(PREF_HIDE_LP, isChecked).apply();
-                } else {
-                    prefs.edit().putBoolean(PREF_HIDE_LP, isChecked).apply();
-                }
+                prefs.edit().putBoolean(PREF_HIDE_LP, isChecked).apply();
             }
         });
 
@@ -345,11 +370,15 @@ public class MainActivity extends AppCompatActivity {
         hideDSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    prefs.edit().putBoolean(PREF_HIDE_D, isChecked).apply();
-                } else {
-                    prefs.edit().putBoolean(PREF_HIDE_D, isChecked).apply();
-                }
+                prefs.edit().putBoolean(PREF_HIDE_D, isChecked).apply();
+            }
+        });
+
+        qamSb.setChecked(prefs.getBoolean(PREF_QAM, false));
+        qamSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                prefs.edit().putBoolean(PREF_QAM, isChecked).apply();
             }
         });
 

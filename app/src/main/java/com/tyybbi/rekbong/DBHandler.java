@@ -6,17 +6,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 public class DBHandler extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    protected static final String DATABASE_NAME = "Plates.db";
+    private static final String DATABASE_NAME = "Plates.db";
     private static final String TABLE_plates = "plates";
     private static final String KEY_ID = "_id";
     private static final String KEY_LETTER_PART = "letterpart";
     private static final String KEY_NUMBER_PART = "numberpart";
     private static final String KEY_DATE = "datetime";
 
-    public DBHandler(Context context) {
+    DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -42,9 +44,7 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // CRUD Operations
-
-    public void addNewPlate(Plate plate) {
+    void addNewPlate(Plate plate) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -54,7 +54,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.insert(TABLE_plates, null, cv);
     }
     
-    public Cursor getAllPlates(boolean reverse) {
+    Cursor getAllPlates(boolean reverse) {
         SQLiteDatabase db = this.getReadableDatabase();
         String sql;
 
@@ -62,29 +62,24 @@ public class DBHandler extends SQLiteOpenHelper {
             // Read in descending order so that the newly added plate shows up first in ListView
             sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_NUMBER_PART + " DESC";
         } else {
-            // Reverse spotting order, ie. from 999 to 1
+            // Reverse spotting order is set
             sql = "SELECT * FROM " + TABLE_plates + " ORDER BY " + KEY_NUMBER_PART;
         }
 
         return db.rawQuery(sql, null);
     }
 
-    public int getNextPlateNum(boolean reverse) {
+    ArrayList<Integer> getAllNumberParts() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql;
-        int nextPlate = -2;
+        String sql = "SELECT " + KEY_NUMBER_PART + " FROM " + TABLE_plates;
+        ArrayList<Integer> plateNumbers = new ArrayList<>();
 
-        if (!reverse) {
-            sql = "SELECT max(" + KEY_NUMBER_PART + ") FROM " + TABLE_plates;
-        } else {
-            sql = "SELECT min(" + KEY_NUMBER_PART + ") FROM " + TABLE_plates;
-        }
-
+        // Get plate numbers from DB and put them into ArrayList
         try {
             Cursor c = db.rawQuery(sql, null);
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                nextPlate = c.getInt(0);
+                plateNumbers.add(c.getInt(c.getColumnIndexOrThrow(KEY_NUMBER_PART)));
                 c.moveToNext();
             }
             c.close();
@@ -92,14 +87,10 @@ public class DBHandler extends SQLiteOpenHelper {
             e.printStackTrace();
         }
 
-        if (!reverse) {
-            return nextPlate + 1;
-        } else {
-            return nextPlate - 1;
-        }
+        return plateNumbers;
     }
 
-    public Plate getPlate(long id) {
+    Plate getPlate(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String sql = "SELECT * FROM " + TABLE_plates + " WHERE " + KEY_ID + " = " + id;
@@ -111,11 +102,12 @@ public class DBHandler extends SQLiteOpenHelper {
         plate.setLetterPart(c.getString(1));
         plate.setNumberPart(c.getInt(2));
         plate.setDatetime(c.getLong(3));
+        c.close();
 
         return plate;
     }
 
-    public void updatePlate(Plate plate) {
+    void updatePlate(Plate plate) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -126,13 +118,13 @@ public class DBHandler extends SQLiteOpenHelper {
         db.update(TABLE_plates, cv,  KEY_ID + " = ?", strId);
     }
 
-    public void deletePlate(Plate plate) {
+    void deletePlate(Plate plate) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] strId = {Integer.toString(plate.getId())};
         db.delete(TABLE_plates, KEY_ID + " = ?", strId);
     }
 
-    public void deleteAll() {
+    void deleteAll() {
         SQLiteDatabase db = this.getWritableDatabase();
         String sql = "DELETE FROM " + TABLE_plates;
         db.execSQL(sql);
