@@ -207,9 +207,6 @@ public class MainActivity extends AppCompatActivity {
                     dbCursor = dbHandler.getAllPlates(prefs.getBoolean(PREF_REVERSE, false));
                     itemsAdapter.changeCursor(dbCursor);
 
-                    Snackbar.make(findViewById(android.R.id.content),
-                            R.string.snackbar_add, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
                     return;
                 }
 
