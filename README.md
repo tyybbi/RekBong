@@ -24,11 +24,16 @@ An Android app to help keep track of spotted vehicle number plates (1-999).
 ## TODO
 
 - Add more spotting info
+    - Utilize date/time
 - Maybe add support for multiple plate formats
+    - Some kind of Free Format mode that allows any combination of letters and
+      numbers
+    - In this case, support for multiple plate collections should be added as well
+        - Of course, the possibility to choose between collections
 
 ## Disclaimer
 
 The project is still very much in the early stages, so big changes and
 non-functional code are expected. For now, the app supports only Finnish
-registration plate format.
+registration plate format (AAA-111).
 
