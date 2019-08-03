@@ -90,6 +90,26 @@ class DBHandler extends SQLiteOpenHelper {
         return plateNumbers;
     }
 
+    ArrayList<Long> getAllDates() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "SELECT " + KEY_DATE + " FROM " + TABLE_plates;
+        ArrayList<Long> plateDates = new ArrayList<>();
+
+        try {
+            Cursor c = db.rawQuery(sql, null);
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                plateDates.add(c.getLong(c.getColumnIndexOrThrow(KEY_DATE)));
+                c.moveToNext();
+            }
+            c.close();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        return plateDates;
+    }
+
     Plate getPlate(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
 

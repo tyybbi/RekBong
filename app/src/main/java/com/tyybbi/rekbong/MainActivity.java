@@ -28,6 +28,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
@@ -36,16 +37,17 @@ import static com.tyybbi.rekbong.Helpers.convertDateToLong;
 import static com.tyybbi.rekbong.Helpers.convertDateToStr;
 import static com.tyybbi.rekbong.Helpers.getNextPlateNumber;
 import static com.tyybbi.rekbong.Helpers.getVersionName;
+import static com.tyybbi.rekbong.Helpers.getSpottingTime;
 
 public class MainActivity extends AppCompatActivity {
 
-    //public static final String TAG = "RekDebug";
+    public static final String TAG = "RekDebug";
+    public static final String SPACE = " ";
     private static final String APP_PREFS = "RBPrefs";
     private static final String PREF_REVERSE = "reverse";
     private static final String PREF_HIDE_LP = "hideLetterPart";
     private static final String PREF_HIDE_D = "hideDateTime";
     private static final String PREF_QAM = "quickAddMode";
-    private static final String SPACE = " ";
     private SharedPreferences prefs;
     private DBHandler dbHandler;
     private CustomCursorAdapter itemsAdapter;
@@ -404,11 +406,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void showAbout() {
         ListView listView = findViewById(R.id.listView);
-        String spotPercent =
-                String.format(Locale.getDefault(), "%.1f",
-                        calculatePercent(listView.getAdapter().getCount()));
-        String progressText = spotPercent + SPACE + getString(R.string.about_dlg_progress2);
 
+        String progressText;
+        ArrayList<Long> plateDates = dbHandler.getAllDates();
+        if (plateDates.size() != 0) {
+            Collections.sort(plateDates);
+
+            long earliestAdd = Collections.min(plateDates);
+            long latestAdd = Collections.max(plateDates);
+            String spottingTime = getSpottingTime(context, latestAdd, earliestAdd);
+            String spotPercent = String.format(Locale.getDefault(), "%.1f",
+                    calculatePercent(listView.getAdapter().getCount()));
+            progressText = spotPercent + SPACE + getString(R.string.about_dlg_progress2)
+                    + SPACE + spottingTime;
+        } else {
+            progressText = "0" + SPACE + getString(R.string.about_dlg_progress3);
+        }
         LayoutInflater li = LayoutInflater.from(context);
         @SuppressLint("InflateParams") View promptsView = li.inflate(R.layout.dialog_about, null);
 

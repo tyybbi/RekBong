@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about_dlg_progress1">Edistyminen</string>
-    <string name="about_dlg_progress2">\u0025 kilvistä bongattu!</string>
+    <string name="about_dlg_progress2">\\u0025 kilvistä bongattu</string>
     <string name="about_dlg_version1">Sovellusversio</string>
     <string name="action_about">Tietoja</string>
     <string name="action_deletedb">Poista tietokanta</string>
@@ -26,4 +26,8 @@
     <string name="snackbar_zero">Nollaa ei sallita. Keskeytetään</string>
     <string name="snackbar_qam_abort">Ei pystytä selvittämään seuraavaa numeroa. Keskeytetään</string>
     <string name="settings_dlg_sb_qam">Pikalisäystila</string>
+    <string name="about_dlg_progress_days">päivässä</string>
+    <string name="about_dlg_progress_months">kuukaudessa,</string>
+    <string name="about_dlg_progress_years">vuodessa,</string>
+    <string name="about_dlg_progress3">\\u0025 kilvistä bongattu</string>
 </resources>

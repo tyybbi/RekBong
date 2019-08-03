@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about_dlg_progress1">Progreso</string>
-    <string name="about_dlg_progress2">\u0025 el platoj ekvidita!</string>
+    <string name="about_dlg_progress2">\\u0025 el platoj ekvidita en</string>
     <string name="about_dlg_version1">Apversio</string>
     <string name="action_about">Pri</string>
     <string name="action_deletedb">Forigu datumbazo</string>
@@ -26,4 +26,8 @@
     <string name="snackbar_zero">Ne nulo permesita. Ĉesita</string>
     <string name="snackbar_qam_abort">Ne povas kalkuli venontan ĉiferon. Ĉesita</string>
     <string name="settings_dlg_sb_qam">Rapidaldonreĝimo</string>
+    <string name="about_dlg_progress_days">tagoj</string>
+    <string name="about_dlg_progress_months">monatoj,</string>
+    <string name="about_dlg_progress_years">jaroj,</string>
+    <string name="about_dlg_progress3">\\u0025 el platoj ekvidita</string>
 </resources>

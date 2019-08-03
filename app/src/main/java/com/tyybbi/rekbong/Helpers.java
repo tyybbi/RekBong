@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 final class Helpers {
     private Helpers() {}
@@ -50,6 +51,39 @@ final class Helpers {
             e.printStackTrace();
         }
         return dateInMillis;
+    }
+
+    static String getSpottingTime(Context context, long first, long latest) {
+        SimpleDateFormat simpleFormatDT = new SimpleDateFormat
+                ("d.M.yyyy HH:mm", Locale.getDefault());
+        String startTime = convertDateToStr(first);
+        String latestAdd = convertDateToStr(latest);
+        String spottingTime = "";
+        long timeDays = 0;
+        long months = 0;
+        long years = 0;
+
+        try {
+            Date date1 = simpleFormatDT.parse(startTime);
+            Date date2 = simpleFormatDT.parse(latestAdd);
+            long timeBetween = date1.getTime() - date2.getTime();
+            timeDays = TimeUnit.MILLISECONDS.toDays(timeBetween);
+            years = timeDays / 365;
+            timeDays %= 365;
+            months = timeDays / 30;
+            timeDays %= 30;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        spottingTime = String.format(Locale.getDefault(), "%d", years) + MainActivity.SPACE
+                + context.getString(R.string.about_dlg_progress_years) + MainActivity.SPACE
+                + String.format(Locale.getDefault(), "%d", months) + MainActivity.SPACE
+                + context.getString(R.string.about_dlg_progress_months) + MainActivity.SPACE
+                + String.format(Locale.getDefault(), "%d", timeDays) + MainActivity.SPACE
+                + context.getString(R.string.about_dlg_progress_days);
+
+        return spottingTime;
     }
 
     static int getNextPlateNumber(ArrayList<Integer> plateNumbers, boolean reverse) {
