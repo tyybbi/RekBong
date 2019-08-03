@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREF_HIDE_LP = "hideLetterPart";
     private static final String PREF_HIDE_D = "hideDateTime";
     private static final String PREF_QAM = "quickAddMode";
-    private static final String DASH = "-";
     private static final String SPACE = " ";
     private SharedPreferences prefs;
     private DBHandler dbHandler;
@@ -317,6 +316,9 @@ public class MainActivity extends AppCompatActivity {
             String letterPart = cursor.getString(cursor.getColumnIndexOrThrow("letterpart"));
             int numberPart = cursor.getInt(cursor.getColumnIndexOrThrow("numberpart"));
 
+            boolean showDash = true;
+            if (letterPart.equals("")) { showDash = false; }
+
             // Populate fields with extracted properties
             if (prefs.getBoolean(PREF_HIDE_D, false)) {
                 dateText.setVisibility(View.INVISIBLE);
@@ -328,8 +330,13 @@ public class MainActivity extends AppCompatActivity {
                 String plate = String.valueOf(numberPart);
                 plateText.setText(plate);
             } else {
-                String plate = letterPart + DASH + numberPart;
-                plateText.setText(plate);
+                if (!showDash) {
+                    String plate = String.valueOf(numberPart);
+                    plateText.setText(plate);
+                } else {
+                    String plate = letterPart + "-" + numberPart;
+                    plateText.setText(plate);
+                }
             }
         }
     }
