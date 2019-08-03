@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about_dlg_progress1">Progreso</string>
-    <string name="about_dlg_progress2">% el platoj ekvidita!</string>
+    <string name="about_dlg_progress2">\u0025 el platoj ekvidita!</string>
     <string name="about_dlg_version1">Apversio</string>
     <string name="action_about">Pri</string>
     <string name="action_deletedb">Forigu datumbazo</string>

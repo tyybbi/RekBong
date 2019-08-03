@@ -1,6 +1,6 @@
 package com.tyybbi.rekbong;
 
-public class Plate {
+class Plate {
     private int id;
     private String letterPart;
     private int numberPart;

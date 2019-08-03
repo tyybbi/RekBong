@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about_dlg_progress1">Edistyminen</string>
-    <string name="about_dlg_progress2">% kilvistä bongattu!</string>
+    <string name="about_dlg_progress2">\u0025 kilvistä bongattu!</string>
     <string name="about_dlg_version1">Sovellusversio</string>
     <string name="action_about">Tietoja</string>
     <string name="action_deletedb">Poista tietokanta</string>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addPlateDlgLLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,7 +30,8 @@
             android:hint="@string/add_dlg_et_example_lp"
             android:inputType="textCapCharacters"
             android:maxLength="3"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="AutoFill" />
 
         <TextView
             android:id="@+id/addPlateDashTv"
@@ -49,7 +51,8 @@
             android:inputType="number|none"
             android:maxLength="3"
             android:digits="0123456789"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="AutoFill" />
 
     </LinearLayout>
 

@@ -24,7 +24,7 @@
     <string name="snackbar_qam_abort">Cannot figure out the next number. Aborting</string>
     <string name="snackbar_zero">No zero allowed. Aborting</string>
     <string name="about_dlg_progress1">Progress</string>
-    <string name="about_dlg_progress2">% of plates spotted!</string>
+    <string name="about_dlg_progress2">\u0025 of plates spotted!</string>
     <string name="about_dlg_version1">App version</string>
     <string name="about_dlg_git" translatable="false">https://github.com/tyybbi/RekBong</string>
     <string name="about_dlg_www" translatable="false">WWW</string>

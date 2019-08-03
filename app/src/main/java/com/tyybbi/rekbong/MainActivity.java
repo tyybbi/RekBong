@@ -1,5 +1,6 @@
 package com.tyybbi.rekbong;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,18 +40,18 @@ import static com.tyybbi.rekbong.Helpers.getVersionName;
 public class MainActivity extends AppCompatActivity {
 
     //public static final String TAG = "RekDebug";
-    public static final String APP_PREFS = "RBPrefs";
-    public static final String PREF_REVERSE = "reverse";
-    public static final String PREF_HIDE_LP = "hideLetterPart";
-    public static final String PREF_HIDE_D = "hideDateTime";
-    public static final String PREF_QAM = "quickAddMode";
+    private static final String APP_PREFS = "RBPrefs";
+    private static final String PREF_REVERSE = "reverse";
+    private static final String PREF_HIDE_LP = "hideLetterPart";
+    private static final String PREF_HIDE_D = "hideDateTime";
+    private static final String PREF_QAM = "quickAddMode";
     private static final String DASH = "-";
     private static final String SPACE = " ";
-    SharedPreferences prefs;
-    DBHandler dbHandler;
-    CustomCursorAdapter itemsAdapter;
-    Cursor dbCursor;
-    final Context context = this;
+    private SharedPreferences prefs;
+    private DBHandler dbHandler;
+    private CustomCursorAdapter itemsAdapter;
+    private Cursor dbCursor;
+    private final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 final Plate plate;
 
                 LayoutInflater li = LayoutInflater.from(context);
-                View promptsView = li.inflate(R.layout.dialog_edit_plate, null);
+                @SuppressLint("InflateParams") View promptsView = li.inflate(R.layout.dialog_edit_plate, null);
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                         context);
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 LayoutInflater li = LayoutInflater.from(context);
-                View promptsView = li.inflate(R.layout.dialog_add_plate, null);
+                @SuppressLint("InflateParams") View promptsView = li.inflate(R.layout.dialog_add_plate, null);
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 						context);
@@ -296,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public class CustomCursorAdapter extends CursorAdapter {
+    class CustomCursorAdapter extends CursorAdapter {
         CustomCursorAdapter(Context context, Cursor cursor) {
             super(context, cursor, 0);
         }
@@ -333,9 +334,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showSettings() {
+    private void showSettings() {
         LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.dialog_settings, null);
+        @SuppressLint("InflateParams") View promptsView = li.inflate(R.layout.dialog_settings, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
@@ -394,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void showAbout() {
+    private void showAbout() {
         ListView listView = findViewById(R.id.listView);
         String spotPercent =
                 String.format(Locale.getDefault(), "%.1f",
@@ -402,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
         String progressText = spotPercent + SPACE + getString(R.string.about_dlg_progress2);
 
         LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.dialog_about, null);
+        @SuppressLint("InflateParams") View promptsView = li.inflate(R.layout.dialog_about, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
@@ -434,9 +435,9 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void deleteDB() {
+    private void deleteDB() {
         LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.dialog_delete_db, null);
+        @SuppressLint("InflateParams") View promptsView = li.inflate(R.layout.dialog_delete_db, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
@@ -483,7 +484,6 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_delete_db:
                 deleteDB();
