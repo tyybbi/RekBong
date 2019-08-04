@@ -29,7 +29,7 @@ final class Helpers {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return versionName;
+        return context.getString(R.string.about_dlg_version) + MainActivity.SPACE + versionName;
     }
 
     static String convertDateToStr(long datetimeMS) {
