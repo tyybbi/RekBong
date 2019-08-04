@@ -19,12 +19,11 @@ An Android app to help keep track of spotted vehicle number plates (1-999).
     - Hide date and time from the plates
     - Quick Add Mode
 - Option to delete database contents
-- About dialog that shows percent of spotted plates and some info about app
+- About dialog that shows percent of spotted plates, total spotting time, and
+  some info about app
 
 ## TODO
 
-- Add more spotting info
-    - Utilize date/time
 - Maybe add support for multiple plate formats
     - Some kind of Free Format mode that allows any combination of letters and
       numbers
