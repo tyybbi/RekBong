@@ -21,7 +21,7 @@
     <string name="settings_dlg_sb_hided">Kaŝu daton kaj tempon</string>
     <string name="snackbar_delete_all">Ĉiuj platoj forigitaj sukcese</string>
     <string name="settings_dlg_sb_reverse">Inversa ekvida ordigordo</string>
-    <string name="snackbar_zero">Ne nulo permesita. Ĉesita</string>
+    <string name="snackbar_zero">Nulo malpermesita. Ĉesita</string>
     <string name="snackbar_qam_abort">Ne povas kalkuli venontan ĉiferon. Ĉesita</string>
     <string name="settings_dlg_sb_qam">Rapidaldonreĝimo</string>
     <string name="about_dlg_progress_days">t</string>
