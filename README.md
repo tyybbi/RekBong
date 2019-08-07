@@ -1,3 +1,9 @@
+<p>
+    <a href="https://github.com/tyybbi/RekBong">
+        <img src="./app/src/main/ic_launcher-web.png" alt="RekBong" width=200>
+    </a>
+</p>
+
 # RekBong
 
 An Android app to help keep track of spotted vehicle number plates (1-999).
