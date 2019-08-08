@@ -6,7 +6,9 @@
 
 # RekBong
 
-An Android app to help keep track of spotted vehicle number plates (1-999).
+An Android app to help keep track of spotted vehicle number plates, when 
+playing Consecutive Number Plate Spotting (CNPS). The app supports numbers
+from 1 to 999, in ascending or descending order.
 
 ## Features and usage
 
