@@ -1,7 +1,9 @@
 <p>
-    <a href="https://github.com/tyybbi/RekBong">
-        <img src="./app/src/main/ic_launcher-web.png" alt="RekBong" width=200>
-    </a>
+  <a href="https://github.com/tyybbi/RekBong">
+    <img
+      src="https://github.com/tyybbi/RekBong/blob/master/app/src/main/ic_launcher-web.png"
+      alt="RekBong" width=200>
+  </a>
 </p>
 
 # RekBong
