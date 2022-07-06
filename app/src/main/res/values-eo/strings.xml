@@ -2,7 +2,7 @@
 <resources>
     <string name="about_dlg_progress2">\u0025 el platoj ekvidita en\n</string>
     <string name="action_about">Pri</string>
-    <string name="action_deletedb">Forigu datumbazo</string>
+    <string name="action_deletedb">Forigu datumbazon</string>
     <string name="action_settings">Agordoj</string>
     <string name="add_dlg_tv_title">Aldonu novan platon</string>
     <string name="delete_db_title_tv">Ĉu vere forigu datumbazon?</string>
@@ -29,4 +29,8 @@
     <string name="about_dlg_progress_years">j,</string>
     <string name="about_dlg_progress3">\u0025 el platoj ekvidita</string>
     <string name="about_dlg_version">Versio</string>
+    <string name="action_exportdb">Eksportu datumbazon</string>
+    <string name="action_importdb">Importu datumbazon</string>
+    <string name="snackbar_export_success">Datumbazo eksportita sukcese</string>
+    <string name="snackbar_import_success">Datumbazo importita sukcese</string>
 </resources>

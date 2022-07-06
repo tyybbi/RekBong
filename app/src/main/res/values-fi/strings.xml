@@ -29,4 +29,8 @@
     <string name="about_dlg_progress_years">v,</string>
     <string name="about_dlg_progress3">\u0025 kilvistä bongattu</string>
     <string name="about_dlg_version">Versio</string>
+    <string name="action_exportdb">Vie tietokanta</string>
+    <string name="action_importdb">Tuo tietokanta</string>
+    <string name="snackbar_export_success">Tietokanta viety onnistuneesti</string>
+    <string name="snackbar_import_success">Tietokanta tuotu onnistuneesti</string>
 </resources>

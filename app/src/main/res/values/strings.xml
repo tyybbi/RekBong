@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">RekBong</string>
+    <string name="action_exportdb">Export database</string>
+    <string name="action_importdb">Import database</string>
     <string name="action_deletedb">Delete database</string>
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
@@ -23,6 +25,8 @@
     <string name="snackbar_invalid_number">Invalid plate number. Aborting</string>
     <string name="snackbar_qam_abort">Cannot figure out the next number. Aborting</string>
     <string name="snackbar_zero">No zero allowed. Aborting</string>
+    <string name="snackbar_export_success">Database exported successfully</string>
+    <string name="snackbar_import_success">Database imported successfully</string>
     <string name="about_dlg_progress2">\u0025 of plates spotted in\n"</string>
     <string name="about_dlg_progress3">\u0025 of plates spotted"</string>
     <string name="about_dlg_progress_years">y,</string>

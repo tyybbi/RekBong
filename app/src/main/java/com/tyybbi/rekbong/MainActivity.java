@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,6 +32,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 
 import static com.tyybbi.rekbong.Helpers.calculatePercent;
 import static com.tyybbi.rekbong.Helpers.convertDateToLong;
@@ -455,6 +461,67 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void exportDB(final Context context) {
+        try {
+            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File data = Environment.getDataDirectory();
+
+            String packageName = context.getApplicationInfo().packageName;
+
+            if (sd.canWrite()) {
+                String currentDBPath = String.format("//data//%s//databases//%s",
+                        packageName, "Plates.db");
+                String backupDBPath = String.format("Plates.db");
+                File currentDB = new File(data, currentDBPath);
+                File backupDB = new File(sd, backupDBPath);
+
+                if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                    Snackbar.make(findViewById(android.R.id.content),
+                                    R.string.snackbar_export_success, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
+
+    private void importDB(final Context context) {
+        try {
+            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File data = Environment.getDataDirectory();
+
+            String packageName = context.getApplicationInfo().packageName;
+
+            if (sd.canWrite()) {
+                String currentDBPath = String.format("//data//%s//databases//%s",
+                        packageName, "Plates.db");
+
+                String backupDBPath = String.format("Plates.db");
+                File backupDB = new File(data, currentDBPath);
+                File currentDB = new File(sd, backupDBPath);
+
+                if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                    Snackbar.make(findViewById(android.R.id.content),
+                                    R.string.snackbar_import_success, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
+
     private void deleteDB() {
         LayoutInflater li = LayoutInflater.from(context);
         @SuppressLint("InflateParams") View promptsView = li.inflate(R.layout.dialog_delete_db, null);
@@ -505,11 +572,17 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_delete_db:
-                deleteDB();
-                return true;
             case R.id.action_settings:
                 showSettings();
+                return true;
+            case R.id.action_export_db:
+                exportDB(context);
+                return true;
+            case R.id.action_import_db:
+                importDB(context);
+                return true;
+            case R.id.action_delete_db:
+                deleteDB();
                 return true;
             case R.id.action_about:
                 showAbout();
