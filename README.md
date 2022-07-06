@@ -28,6 +28,11 @@ from 1 to 999, in ascending or descending order.
       is shown
     - Hide date and time from the plates
     - Quick Add Mode
+- Option to export database to SD card
+    - The database file is saved as "Plates.db" in the Downloads folder
+- Option to import database from SD card
+    - The database file to be imported must be named "Plates.db" and reside in the Downloads
+      folder
 - Option to delete database contents
 - About dialog that shows percent of spotted plates, total spotting time, and
   some info about app
