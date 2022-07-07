@@ -28,6 +28,8 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -462,63 +464,100 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void exportDB(final Context context) {
-        try {
-            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File data = Environment.getDataDirectory();
+        File sd_dl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File data = Environment.getDataDirectory();
+        String packageName = context.getApplicationInfo().packageName;
 
-            String packageName = context.getApplicationInfo().packageName;
-
-            if (sd.canWrite()) {
-                String currentDBPath = String.format("//data//%s//databases//%s",
-                        packageName, "Plates.db");
-                String backupDBPath = String.format("Plates.db");
-                File currentDB = new File(data, currentDBPath);
-                File backupDB = new File(sd, backupDBPath);
-
+        if (sd_dl.canWrite()) {
+            String currentDBPath = String.format("//data//%s//databases//%s",
+                    packageName, "Plates.db");
+            String backupDBPath = String.format("Plates.db");
+            File currentDB = new File(data, currentDBPath);
+            File backupDB = new File(sd_dl, backupDBPath);
+            FileChannel src = null;
+            FileChannel dst = null;
+            try {
                 if (currentDB.exists()) {
-                    FileChannel src = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    src = new FileInputStream(currentDB).getChannel();
+                    dst = new FileOutputStream(backupDB).getChannel();
                     dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-                    Snackbar.make(findViewById(android.R.id.content),
-                                    R.string.snackbar_export_success, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (src != null) {
+                    try {
+                        src.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (dst != null) {
+                    try {
+                        dst.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        } catch (Exception e) {
-            throw new Error(e);
+            Snackbar.make(findViewById(android.R.id.content),
+                            R.string.snackbar_export_success, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        } else {
+            Snackbar.make(findViewById(android.R.id.content),
+                            R.string.snackbar_export_failure, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
     }
 
     private void importDB(final Context context) {
-        try {
-            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File data = Environment.getDataDirectory();
+        File sd_dl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File data = Environment.getDataDirectory();
+        String packageName = context.getApplicationInfo().packageName;
 
-            String packageName = context.getApplicationInfo().packageName;
-
-            if (sd.canWrite()) {
-                String currentDBPath = String.format("//data//%s//databases//%s",
-                        packageName, "Plates.db");
-
-                String backupDBPath = String.format("Plates.db");
-                File backupDB = new File(data, currentDBPath);
-                File currentDB = new File(sd, backupDBPath);
-
+        if (sd_dl.canWrite()) {
+            String currentDBPath = String.format("//data//%s//databases//%s",
+                    packageName, "Plates.db");
+            String backupDBPath = String.format("Plates.db");
+            File backupDB = new File(data, currentDBPath);
+            File currentDB = new File(sd_dl, backupDBPath);
+            FileChannel src = null;
+            FileChannel dst = null;
+            try {
                 if (currentDB.exists()) {
-                    FileChannel src = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    src = new FileInputStream(currentDB).getChannel();
+                    dst = new FileOutputStream(backupDB).getChannel();
                     dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-                    Snackbar.make(findViewById(android.R.id.content),
-                                    R.string.snackbar_import_success, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (src != null) {
+                    try {
+                        src.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (dst != null) {
+                    try {
+                        dst.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        } catch (Exception e) {
-            throw new Error(e);
+            Snackbar.make(findViewById(android.R.id.content),
+                            R.string.snackbar_export_success, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        } else {
+            Snackbar.make(findViewById(android.R.id.content),
+                            R.string.snackbar_import_failure, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
     }
 

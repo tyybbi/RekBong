@@ -33,4 +33,6 @@
     <string name="action_importdb">Importu datumbazon</string>
     <string name="snackbar_export_success">Datumbazo eksportita sukcese</string>
     <string name="snackbar_import_success">Datumbazo importita sukcese</string>
+    <string name="snackbar_export_failure">Datumbazeksporto malsukcesis</string>
+    <string name="snackbar_import_failure">Datumbazimporto malsukcesis</string>
 </resources>

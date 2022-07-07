@@ -33,4 +33,6 @@
     <string name="action_importdb">Tuo tietokanta</string>
     <string name="snackbar_export_success">Tietokanta viety onnistuneesti</string>
     <string name="snackbar_import_success">Tietokanta tuotu onnistuneesti</string>
+    <string name="snackbar_export_failure">Tietokannan vienti epäonnistui</string>
+    <string name="snackbar_import_failure">Tietokannan tuonti epäonnistui</string>
 </resources>
