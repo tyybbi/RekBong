@@ -464,7 +464,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void exportDB(final Context context) {
-        File sd_dl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File sd_dl = new File(Environment.getExternalStorageDirectory()
+                + File.separator + Environment.DIRECTORY_DOWNLOADS);
         File data = Environment.getDataDirectory();
         String packageName = context.getApplicationInfo().packageName;
 
@@ -513,7 +514,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void importDB(final Context context) {
-        File sd_dl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File sd_dl = new File(Environment.getExternalStorageDirectory()
+                + File.separator + Environment.DIRECTORY_DOWNLOADS);
         File data = Environment.getDataDirectory();
         String packageName = context.getApplicationInfo().packageName;
 
