@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -15,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -464,6 +468,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void exportDB(final Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && false == Environment.isExternalStorageManager()) {
+            Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+            startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
+        }
+
         File sd_dl = new File(Environment.getExternalStorageDirectory()
                 + File.separator + Environment.DIRECTORY_DOWNLOADS);
         File data = Environment.getDataDirectory();
@@ -514,6 +523,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void importDB(final Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && false == Environment.isExternalStorageManager()) {
+            Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+            startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
+        }
         File sd_dl = new File(Environment.getExternalStorageDirectory()
                 + File.separator + Environment.DIRECTORY_DOWNLOADS);
         File data = Environment.getDataDirectory();
