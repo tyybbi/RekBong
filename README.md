@@ -1,3 +1,5 @@
+*Migrated to [Codeberg.org](https://codeberg.org/tyybbi/RekBong)*
+
 <p>
   <a href="https://github.com/tyybbi/RekBong">
     <img
